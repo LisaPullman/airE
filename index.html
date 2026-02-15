@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="airE - 航空英语学习平台，面向小学生的趣味英语学习应用" />
+    <meta name="theme-color" content="#3b82f6" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="airE" />
+    
+    <title>airE - 航空英语学习平台</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+    
+    <style>
+      /* 初始加载动画 */
+      #loading {
+        position: fixed;
+        inset: 0;
+        background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #e0f7fa 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+      }
+      
+      #loading.hidden {
+        opacity: 0;
+        pointer-events: none;
+      }
+      
+      .loading-icon {
+        font-size: 64px;
+        animation: bounce 2s infinite;
+      }
+      
+      .loading-text {
+        margin-top: 16px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #1e3a5f;
+      }
+      
+      @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-20px); }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading">
+      <div class="loading-icon">✈️</div>
+      <div class="loading-text">airE</div>
+    </div>
+    
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx">
+      // 隐藏加载动画
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          document.getElementById('loading')?.classList.add('hidden');
+        }, 500);
+      });
+    </script>
+  </body>
+</html>
