@@ -77,11 +77,64 @@
    - 得分统计
    - 重新测试功能
 
-#### 新增功能
+---
 
-- 天气模块路由 (`/modules/weather`)
-- 天气知识小贴士
-- 天气飞行安全提示
+## 开发阶段三：PostgreSQL 数据持久化 ✅ 完成
+
+### 日期：2026-02-15
+
+#### 新增 SQL 文件
+
+```
+sql/
+├── schema.sql      # 数据库表结构 (16张表)
+├── seed.sql        # 种子数据
+└── README.md       # 使用说明
+```
+
+#### 数据库表结构
+
+| 分类 | 表名 | 说明 |
+|-----|------|------|
+| 用户 | users | 用户表 |
+| | user_badges | 用户徽章关联 |
+| | user_achievements | 用户成就 |
+| 课程 | modules | 课程模块 |
+| | vocabularies | 词汇表 |
+| | sentences | 句型表 |
+| | questions | 题目表 |
+| 目标 | goals | 学习目标 |
+| | goal_progress | 目标进度 |
+| 记录 | practice_records | 练习记录 |
+| | learning_history | 学习历史 |
+| 配置 | pilot_titles | 称号配置 |
+| | badge_configs | 徽章配置 |
+
+#### 新增服务层
+
+```
+src/services/
+├── index.ts              # 服务导出
+├── userService.ts        # 用户服务
+├── courseService.ts      # 课程服务
+├── goalService.ts        # 目标服务
+├── practiceService.ts    # 练习服务
+└── achievementService.ts  # 成就服务
+```
+
+#### 新增配置
+
+- `src/lib/db.ts` - PostgreSQL 连接池配置
+- `.env.example` - 环境变量示例
+- `.env` - 开发环境配置
+
+#### npm 脚本
+
+```bash
+npm run db:init    # 初始化数据库
+npm run db:seed    # 导入种子数据
+npm run db:reset  # 重置数据库
+```
 
 ---
 
@@ -89,9 +142,9 @@
 
 | 模块 | 名称 | 词汇数 | 句型数 | 状态 |
 |-----|------|-------|-------|------|
-| M1 | 飞机认知 | 4 | 2 | ✅ |
-| M2 | 机场流程 | 3 | 2 | ✅ |
-| M3 | 塔台通信 | 2 | 2 | ✅ |
+| M1 | 飞机认知 | 6 | 3 | ✅ |
+| M2 | 机场流程 | 5 | 3 | ✅ |
+| M3 | 塔台通信 | 4 | 4 | ✅ |
 | M4 | 航空天气 | 8 | 6 | ✅ 新增 |
 
 ---
@@ -100,36 +153,38 @@
 
 ### 1. Token 优化
 - ✅ TypeScript 类型系统减少运行时错误
-- ✅ 组件按需加载
+- ✅ 服务层按功能拆分，按需加载
 
 ### 2. 内存持久化
-- ✅ Zustand + persist middleware 自动保存
-- ✅ localStorage 持久化学习进度
+- ✅ PostgreSQL 持久化存储
+- ✅ Zustand + persist 本地缓存
+- ✅ 双重持久化保障
 
 ### 3. 持续学习
-- ✅ 将常用组件固化为可复用模块
-- ✅ 记录开发经验到 DEVELOPMENT_LOG.md
+- ✅ 服务层模式提取
+- ✅ 文档完善 (SQL/README.md)
 
 ### 4. 验证循环
-- ✅ 每个阶段完成后进行代码审查
-- ✅ 组件功能独立测试
+- ✅ 数据库约束确保数据完整性
+- ✅ 服务层业务逻辑验证
 
 ---
 
 ## 下一步计划
 
-### Phase 3: 练习系统
-- [ ] 选择题组件
-- [ ] 情景对话组件
-- [ ] 听说练习组件
-- [ ] 卡片匹配游戏
+### Phase 4: 用户认证系统
+- [ ] 注册/登录 API
+- [ ] JWT 认证中间件
+- [ ] 用户注册页面
+- [ ] 用户登录页面
 
-### Phase 4: 用户系统
-- [ ] 注册/登录功能
-- [ ] 目标CRUD
-- [ ] 学习进度追踪
+### Phase 5: 后端 API
+- [ ] Express.js 服务器
+- [ ] RESTful API 路由
+- [ ] 认证中间件
+- [ ] API 文档
 
-### Phase 5: PWA支持
+### Phase 6: PWA支持
 - [ ] Service Worker 配置
 - [ ] 离线缓存
 - [ ] 部署到 GitHub Pages
