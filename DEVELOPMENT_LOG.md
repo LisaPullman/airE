@@ -14,7 +14,6 @@
 2. **数据模型设计** ✅
    - 用户表结构 (User, PilotTitle)
    - 课程模块表 (Module, Vocabulary, Sentence)
-   - 题目表 (Question, QuestionType)
    - 目标表 (Goal)
    - 成就表 (Badge)
 
@@ -63,20 +62,6 @@
 5. Ceiling is 800 feet with broken clouds (云幕高度800英尺，多云)
 6. Runway visual range is 1000 meters (跑道视程1000米)
 
-#### 新增组件
-
-1. **WeatherModule 页面** (`/src/pages/learning/WeatherModule.tsx`)
-   - 词汇和句型标签切换展示
-   - 发音/跟读按钮
-   - 天气知识卡片
-   - 开始练习入口
-
-2. **WeatherQuiz 组件** (`/src/components/practice/WeatherQuiz.tsx`)
-   - 5道选择题测验
-   - 实时反馈和解释
-   - 得分统计
-   - 重新测试功能
-
 ---
 
 ## 开发阶段三：PostgreSQL 数据持久化 ✅ 完成
@@ -87,54 +72,99 @@
 
 ```
 sql/
-├── schema.sql      # 数据库表结构 (16张表)
+├── schema.sql      # 数据库表结构 (5张核心表)
 ├── seed.sql        # 种子数据
 └── README.md       # 使用说明
 ```
 
-#### 数据库表结构
+#### 数据库表结构 (5张核心表)
 
-| 分类 | 表名 | 说明 |
-|-----|------|------|
-| 用户 | users | 用户表 |
-| | user_badges | 用户徽章关联 |
-| | user_achievements | 用户成就 |
-| 课程 | modules | 课程模块 |
-| | vocabularies | 词汇表 |
-| | sentences | 句型表 |
-| | questions | 题目表 |
-| 目标 | goals | 学习目标 |
-| | goal_progress | 目标进度 |
-| 记录 | practice_records | 练习记录 |
-| | learning_history | 学习历史 |
-| 配置 | pilot_titles | 称号配置 |
-| | badge_configs | 徽章配置 |
+| 表名 | 说明 |
+|-----|------|
+| users | 用户表 |
+| modules | 课程模块表 |
+| vocabularies | 词汇表 |
+| sentences | 句型表 |
+| goals | 学习目标表 |
 
-#### 新增服务层
+---
 
-```
-src/services/
-├── index.ts              # 服务导出
-├── userService.ts        # 用户服务
-├── courseService.ts      # 课程服务
-├── goalService.ts        # 目标服务
-├── practiceService.ts    # 练习服务
-└── achievementService.ts  # 成就服务
-```
+## 开发阶段四：目标设定模块 ✅ 完成
 
-#### 新增配置
+### 日期：2026-02-15
 
-- `src/lib/db.ts` - PostgreSQL 连接池配置
-- `.env.example` - 环境变量示例
-- `.env` - 开发环境配置
+#### 新增组件
 
-#### npm 脚本
+1. **GoalCard** - 目标卡片组件
+   - 显示目标名称、状态、进度
+   - 支持完成/放弃操作
 
-```bash
-npm run db:init    # 初始化数据库
-npm run db:seed    # 导入种子数据
-npm run db:reset  # 重置数据库
-```
+2. **GoalForm** - 创建目标表单
+   - 目标名称输入
+   - 关联模块选择
+   - 达标分数滑块
+
+3. **GoalsPage** - 目标管理页面
+   - 目标列表展示
+   - 筛选功能 (全部/进行中/已完成)
+   - 统计卡片
+
+---
+
+## 开发阶段五：学习内容模块 ✅ 完成
+
+### 日期：2026-02-15
+
+#### 新增组件
+
+1. **VocabularyCard** - 词汇卡片
+   - 翻转效果 (正面单词，背面释义)
+   - 发音按钮
+
+2. **SentenceCard** - 句型卡片
+   - 展开/收起功能
+   - 播放/跟读按钮
+
+3. **ModuleDetailPage** - 模块详情页
+   - 词汇和句型标签切换
+   - 统计信息展示
+   - 开始练习入口
+
+---
+
+## 开发阶段六：互动练习模块 ✅ 完成
+
+### 日期：2026-02-15
+
+#### 新增组件
+
+1. **ChoiceQuestion** - 选择题组件
+   - 4选1 题目
+   - 实时反馈
+   - 解释说明
+
+2. **QuizPage** - 测验页面
+   - 计时功能
+   - 进度条
+   - 分数统计
+   - 结果展示
+
+---
+
+## 开发阶段七：成就系统 ✅ 完成
+
+### 日期：2026-02-15
+
+#### 新增组件
+
+1. **BadgeCard** - 徽章卡片
+   - 已获得/未获得状态
+   - 展示描述
+
+2. **TitleProgress** - 称号进度
+   - 当前等级展示
+   - 经验值进度条
+   - 等级列表
 
 ---
 
@@ -145,7 +175,7 @@ npm run db:reset  # 重置数据库
 | M1 | 飞机认知 | 6 | 3 | ✅ |
 | M2 | 机场流程 | 5 | 3 | ✅ |
 | M3 | 塔台通信 | 4 | 4 | ✅ |
-| M4 | 航空天气 | 8 | 6 | ✅ 新增 |
+| M4 | 航空天气 | 8 | 6 | ✅ |
 
 ---
 
@@ -153,38 +183,40 @@ npm run db:reset  # 重置数据库
 
 ### 1. Token 优化
 - ✅ TypeScript 类型系统减少运行时错误
-- ✅ 服务层按功能拆分，按需加载
+- ✅ 组件按需加载
 
 ### 2. 内存持久化
 - ✅ PostgreSQL 持久化存储
 - ✅ Zustand + persist 本地缓存
-- ✅ 双重持久化保障
 
 ### 3. 持续学习
 - ✅ 服务层模式提取
-- ✅ 文档完善 (SQL/README.md)
+- ✅ 文档完善
 
 ### 4. 验证循环
 - ✅ 数据库约束确保数据完整性
-- ✅ 服务层业务逻辑验证
+- ✅ 组件功能独立验证
 
 ---
 
 ## 下一步计划
 
-### Phase 4: 用户认证系统
-- [ ] 注册/登录 API
-- [ ] JWT 认证中间件
-- [ ] 用户注册页面
-- [ ] 用户登录页面
+### Phase 8: 进度追踪
+- [ ] ProgressChart 组件 - 进度图表
+- [ ] RadarChart 组件 - 雷达图
+- [ ] StatsCard 组件 - 统计卡片
+- [ ] Dashboard 页面 - 仪表盘
 
-### Phase 5: 后端 API
-- [ ] Express.js 服务器
-- [ ] RESTful API 路由
-- [ ] 认证中间件
-- [ ] API 文档
+### Phase 9: 个人中心
+- [ ] ProfileHeader 组件 - 头部信息
+- [ ] AvatarSelector 组件 - 头像选择
+- [ ] SettingsForm 组件 - 设置表单
 
-### Phase 6: PWA支持
+### Phase 10: PWA 支持
+- [ ] manifest.json 配置
 - [ ] Service Worker 配置
-- [ ] 离线缓存
-- [ ] 部署到 GitHub Pages
+- [ ] 离线缓存策略
+
+### Phase 11: 部署上线
+- [ ] GitHub Pages 部署
+- [ ] Vercel 部署
