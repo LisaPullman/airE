@@ -4,10 +4,30 @@
 
 ```
 sql/
-├── schema.sql      # 数据库表结构设计
+├── schema.sql      # 数据库表结构设计 (精简版 5张核心表)
 ├── seed.sql        # 初始种子数据
 └── README.md       # 本说明文件
 ```
+
+## 核心表 (5张)
+
+| 表名 | 说明 | 核心字段 |
+|-----|------|---------|
+| **users** | 用户表 | username, nickname, level, exp, badges(jsonb) |
+| **modules** | 课程模块 | code, name, description, vocab_count, sentence_count |
+| **vocabularies** | 词汇表 | word, translation, example_sentence |
+| **sentences** | 句型表 | english, chinese |
+| **goals** | 学习目标 | user_id, name, target_score, status, progress |
+
+## 后续可添加的表
+
+| 表名 | 用途 | 添加时机 |
+|-----|------|---------|
+| questions | 测验题目库 | 练习功能扩展 |
+| practice_records | 练习记录 | 用户数据分析 |
+| learning_history | 学习历史 | 详细进度追踪 |
+| pilot_titles | 称号配置 | 前端配置即可 |
+| badge_configs | 徽章配置 | 前端配置即可 |
 
 ## 使用方法
 
@@ -55,20 +75,8 @@ SELECT * FROM modules;
 DATABASE_URL=postgresql://username:password@localhost:5432/aire_learning
 ```
 
-## 表结构概览
+## 设计原则
 
-| 表名 | 说明 |
-|-----|------|
-| users | 用户表 |
-| user_badges | 用户徽章关联 |
-| user_achievements | 用户成就 |
-| modules | 课程模块 |
-| vocabularies | 词汇表 |
-| sentences | 句型表 |
-| questions | 题目表 |
-| goals | 学习目标 |
-| goal_progress | 目标进度 |
-| practice_records | 练习记录 |
-| learning_history | 学习历史 |
-| pilot_titles | 称号配置 |
-| badge_configs | 徽章配置 |
+- **核心优先**: 只保留当前必要的表
+- **灵活扩展**: JSONB 字段支持灵活存储
+- **避免过度**: 后续按需添加，不提前设计

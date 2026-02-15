@@ -1,6 +1,5 @@
-// 用户服务层
+// 用户服务层 (精简版)
 import db from '../lib/db'
-import type { User } from '../types'
 
 // 获取用户信息
 export async function getUserById(userId: string) {
@@ -21,12 +20,12 @@ export async function getUserByUsername(username: string) {
 }
 
 // 创建用户
-export async function createUser(user: Omit<User, 'id' | 'createdAt'>) {
+export async function createUser(username: string, passwordHash: string, nickname: string) {
   const result = await db.query(
-    `INSERT INTO users (username, password_hash, nickname, title, level, exp, streak_days)
-     VALUES ($1, $2, $3, $4, $5, $6, $7)
+    `INSERT INTO users (username, password_hash, nickname)
+     VALUES ($1, $2, $3)
      RETURNING *`,
-    [user.username, user.password_hash, user.nickname, user.title, user.level, user.exp, user.streak_days]
+    [username, passwordHash, nickname]
   )
   return result.rows[0]
 }
@@ -56,23 +55,14 @@ export async function updateStreakDays(userId: string) {
   return result.rows[0]
 }
 
-// 获取用户徽章
-export async function getUserBadges(userId: string) {
+// 授予徽章
+export async function awardBadge(userId: string, badge: { id: string; name: string; icon: string }) {
   const result = await db.query(
-    `SELECT * FROM user_badges WHERE user_id = $1`,
-    [userId]
-  )
-  return result.rows
-}
-
-// 授予用户徽章
-export async function awardBadge(userId: string, badgeId: string, badgeName: string) {
-  const result = await db.query(
-    `INSERT INTO user_badges (user_id, badge_id, badge_name)
-     VALUES ($1, $2, $3)
-     ON CONFLICT (user_id, badge_id) DO NOTHING
+    `UPDATE users 
+     SET badges = badges || $1::jsonb
+     WHERE id = $2
      RETURNING *`,
-    [userId, badgeId, badgeName]
+    [JSON.stringify([badge]), userId]
   )
   return result.rows[0]
 }

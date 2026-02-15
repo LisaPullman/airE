@@ -1,6 +1,5 @@
-// 目标服务层
+// 目标服务层 (精简版)
 import db from '../lib/db'
-import type { Goal, GoalProgress } from '../types'
 
 // 获取用户的所有目标
 export async function getUserGoals(userId: string) {
@@ -21,61 +20,61 @@ export async function getActiveGoals(userId: string) {
 }
 
 // 创建目标
-export async function createGoal(goal: Omit<Goal, 'id' | 'createdAt'>) {
+export async function createGoal(userId: string, name: string, moduleId: string | null, targetScore: number) {
   const result = await db.query(
     `INSERT INTO goals (user_id, name, module_id, target_score, status)
-     VALUES ($1, $2, $3, $4, $5)
+     VALUES ($1, $2, $3, $4, 'active')
      RETURNING *`,
-    [goal.userId, goal.name, goal.moduleId, goal.targetScore, goal.status]
+    [userId, name, moduleId, targetScore]
   )
   return result.rows[0]
-}
-
-// 更新目标状态
-export async function updateGoalStatus(goalId: string, status: Goal['status']) {
-  const result = await db.query(
-    `UPDATE goals 
-     SET status = $1,
-         completed_at = CASE WHEN $1 = 'completed' THEN NOW() ELSE completed_at END
-     WHERE id = $2
-     RETURNING *`,
-    [status, goalId]
-  )
-  return result.rows[0]
-}
-
-// 获取目标进度
-export async function getGoalProgress(goalId: string) {
-  const result = await db.query(
-    `SELECT * FROM goal_progress WHERE goal_id = $1`,
-    [goalId]
-  )
-  return result.rows[0] || null
 }
 
 // 更新目标进度
-export async function upsertGoalProgress(progress: Omit<GoalProgress, 'id'>) {
+export async function updateGoalProgress(
+  goalId: string, 
+  updates: { vocabLearned?: number; sentencesLearned?: number; testScore?: number }
+) {
+  const setClause: string[] = []
+  const values: any[] = []
+  let paramIndex = 1
+  
+  if (updates.vocabLearned !== undefined) {
+    setClause.push(`vocab_learned = $${paramIndex++}`)
+    values.push(updates.vocabLearned)
+  }
+  if (updates.sentencesLearned !== undefined) {
+    setClause.push(`sentences_learned = $${paramIndex++}`)
+    values.push(updates.sentencesLearned)
+  }
+  if (updates.testScore !== undefined) {
+    setClause.push(`test_score = $${paramIndex++}`)
+    values.push(updates.testScore)
+  }
+  
+  values.push(goalId)
+  
   const result = await db.query(
-    `INSERT INTO goal_progress (goal_id, vocab_learned, sentences_learned, test_score, is_passed)
-     VALUES ($1, $2, $3, $4, $5)
-     ON CONFLICT (goal_id) 
-     DO UPDATE SET 
-        vocab_learned = EXCLUDED.vocab_learned,
-        sentences_learned = EXCLUDED.sentences_learned,
-        test_score = EXCLUDED.test_score,
-        is_passed = EXCLUDED.is_passed,
-        updated_at = NOW()
-     RETURNING *`,
-    [progress.goalId, progress.vocabLearned, progress.sentencesLearned, progress.testScore, progress.isPassed]
+    `UPDATE goals SET ${setClause.join(', ')} WHERE id = $${paramIndex} RETURNING *`,
+    values
   )
   return result.rows[0]
 }
 
-// 完成任务判定
-export async function completeGoalIfPassed(goalId: string, testScore: number, targetScore: number) {
-  if (testScore >= targetScore) {
-    await updateGoalStatus(goalId, 'completed')
-    return true
-  }
-  return false
+// 完成任务
+export async function completeGoal(goalId: string) {
+  const result = await db.query(
+    `UPDATE goals SET status = 'completed', completed_at = NOW() WHERE id = $1 RETURNING *`,
+    [goalId]
+  )
+  return result.rows[0]
+}
+
+// 放弃目标
+export async function abandonGoal(goalId: string) {
+  const result = await db.query(
+    `UPDATE goals SET status = 'abandoned' WHERE id = $1 RETURNING *`,
+    [goalId]
+  )
+  return result.rows[0]
 }

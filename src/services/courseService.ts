@@ -1,6 +1,5 @@
-// 课程服务层
+// 课程服务层 (精简版)
 import db from '../lib/db'
-import type { Module, Vocabulary, Sentence } from '../types'
 
 // 获取所有模块
 export async function getAllModules() {
@@ -42,30 +41,6 @@ export async function getSentencesByModule(moduleId: string) {
   const result = await db.query(
     `SELECT * FROM sentences WHERE module_id = $1 ORDER BY display_order`,
     [moduleId]
-  )
-  return result.rows
-}
-
-// 获取模块的所有题目
-export async function getQuestionsByModule(moduleId: string, limit = 10) {
-  const result = await db.query(
-    `SELECT * FROM questions 
-     WHERE module_id = $1 
-     ORDER BY difficulty, display_order
-     LIMIT $2`,
-    [moduleId, limit]
-  )
-  return result.rows
-}
-
-// 随机获取题目
-export async function getRandomQuestions(moduleId: string, count = 5) {
-  const result = await db.query(
-    `SELECT * FROM questions 
-     WHERE module_id = $1 
-     ORDER BY RANDOM() 
-     LIMIT $2`,
-    [moduleId, count]
   )
   return result.rows
 }

@@ -1,16 +1,16 @@
--- airE 航空英语学习平台 - 种子数据
--- 版本: v1.0
+-- airE 航空英语学习平台 - 种子数据 (精简版)
+-- 版本: v2.0
 -- 日期: 2026-02-15
 
 -- ============================================
 -- 1. 插入课程模块
 -- ============================================
 
-INSERT INTO modules (code, name, description, icon, display_order) VALUES
-('M1', '飞机认知', '学习飞机各部件的英文名称', '✈️', 1),
-('M2', '机场流程', '掌握机场常用英语表达', '🏢', 2),
-('M3', '塔台通信', '学习塔台标准通话用语', '📡', 3),
-('M4', '航空天气', '了解天气对飞行的影响', '🌤️', 4)
+INSERT INTO modules (code, name, description, icon, vocab_count, sentence_count, display_order) VALUES
+('M1', '飞机认知', '学习飞机各部件的英文名称', '✈️', 6, 3, 1),
+('M2', '机场流程', '掌握机场常用英语表达', '🏢', 5, 3, 2),
+('M3', '塔台通信', '学习塔台标准通话用语', '📡', 4, 4, 3),
+('M4', '航空天气', '了解天气对飞行的影响', '🌤️', 8, 6, 4)
 ON CONFLICT (code) DO NOTHING;
 
 -- ============================================
@@ -80,7 +80,7 @@ INSERT INTO vocabularies (module_id, word, translation, example_sentence, displa
 SELECT id, 'taxi', '滑行', 'Taxi to runway 24.', 4 FROM modules WHERE code = 'M3'
 ON CONFLICT DO NOTHING;
 
--- Module 4: 航空天气 (新增)
+-- Module 4: 航空天气
 INSERT INTO vocabularies (module_id, word, translation, example_sentence, display_order)
 SELECT id, 'visibility', '能见度', 'Low visibility on the runway.', 1 FROM modules WHERE code = 'M4'
 ON CONFLICT DO NOTHING;
@@ -160,7 +160,7 @@ INSERT INTO sentences (module_id, english, chinese, display_order)
 SELECT id, 'Taxi to runway', '滑行至跑道', 4 FROM modules WHERE code = 'M3'
 ON CONFLICT DO NOTHING;
 
--- Module 4 句型 (新增)
+-- Module 4 句型
 INSERT INTO sentences (module_id, english, chinese, display_order)
 SELECT id, 'What is the visibility?', '能见度是多少？', 1 FROM modules WHERE code = 'M4'
 ON CONFLICT DO NOTHING;
@@ -184,79 +184,3 @@ ON CONFLICT DO NOTHING;
 INSERT INTO sentences (module_id, english, chinese, display_order)
 SELECT id, 'Runway visual range is 1000 meters', '跑道视程1000米', 6 FROM modules WHERE code = 'M4'
 ON CONFLICT DO NOTHING;
-
--- ============================================
--- 4. 插入题目数据 (天气模块)
--- ============================================
-
-INSERT INTO questions (module_id, type, question, options, correct_answer, explanation, difficulty)
-SELECT id, 'choice', 'What does "visibility" mean in aviation?',
-    '["能见度", "高度", "速度", "温度"]'::jsonb,
-    '"能见度"'::jsonb,
-    'Visibility refers to how far you can see, important for safe landing.',
-    1
-FROM modules WHERE code = 'M4'
-ON CONFLICT DO NOTHING;
-
-INSERT INTO questions (module_id, type, question, options, correct_answer, explanation, difficulty)
-SELECT id, 'choice', 'What should pilots avoid during thunderstorms?',
-    '["Cloud flying", "Direct flight path", "Turbulence zones", "Night flying"]'::jsonb,
-    '"Turbulence zones"'::jsonb,
-    'Thunderstorms create dangerous turbulence that can damage aircraft.',
-    2
-FROM modules WHERE code = 'M4'
-ON CONFLICT DO NOTHING;
-
-INSERT INTO questions (module_id, type, question, options, correct_answer, explanation, difficulty)
-SELECT id, 'choice', '"Ceiling" in aviation weather refers to:',
-    '["Cloud height", "Building height", "Mountain height", "Runway length"]'::jsonb,
-    '"Cloud height"'::jsonb,
-    'Ceiling is the height of the lowest cloud layer.',
-    1
-FROM modules WHERE code = 'M4'
-ON CONFLICT DO NOTHING;
-
-INSERT INTO questions (module_id, type, question, options, correct_answer, explanation, difficulty)
-SELECT id, 'choice', 'What is "crosswind"?',
-    '["Wind from behind", "Wind from side", "Wind from front", "No wind"]'::jsonb,
-    '"Wind from side"'::jsonb,
-    'Crosswind makes landing more challenging for pilots.',
-    1
-FROM modules WHERE code = 'M4'
-ON CONFLICT DO NOTHING;
-
-INSERT INTO questions (module_id, type, question, options, correct_answer, explanation, difficulty)
-SELECT id, 'choice', 'If you hear "expect turbulence", you should:',
-    '["Turn off seatbelt sign", "Fasten your seatbelt", "Open cabin door", "Stand up"]'::jsonb,
-    '"Fasten your seatbelt"'::jsonb,
-    'Always buckle up when turbulence is expected!',
-    1
-FROM modules WHERE code = 'M4'
-ON CONFLICT DO NOTHING;
-
--- ============================================
--- 5. 插入称号配置
--- ============================================
-
-INSERT INTO pilot_titles (level, name, required_exp, icon, description) VALUES
-(1, '新手飞行员', 0, '👶', '刚刚开始飞行学习之旅'),
-(2, '初级副驾', 1000, '🧑‍✈️', '开始理解飞行基本概念'),
-(3, '副驾', 2000, '🧑‍✈️', '能够独立完成基础飞行任务'),
-(4, '机长', 3000, '👨‍✈️', '具备指挥航班的能力'),
-(5, '指挥官', 4000, '⭐', '航空领域的专家'),
-(6, '传奇飞行员', 5000, '🏆', '航空英语的大师')
-ON CONFLICT DO NOTHING;
-
--- ============================================
--- 6. 插入徽章配置
--- ============================================
-
-INSERT INTO badge_configs (code, name, description, icon_url, condition_type, condition_value, points) VALUES
-('tower_skills', '塔台小能手', '完成塔台对话模块', '📻', 'module_complete', '{"module_code": "M3"}', 20),
-('weather_expert', '天气预报员', '完成天气英语模块', '🌤️', 'module_complete', '{"module_code": "M4"}', 20),
-('emergency_rescue', '紧急救援队', '完成紧急情况模块', '🚨', 'module_complete', '{"module_code": "M5"}', 20),
-('full_attendance', '全勤飞行员', '连续学习7天', '📅', 'streak_days', '{"days": 7}', 30),
-('perfect_score', '满分达人', '单次测试获得满分', '⭐', 'test_score', '{"min_score": 100}', 25),
-('vocabulary_master', '词汇达人', '掌握100个航空词汇', '📚', 'vocab_count', '{"count": 100}', 25)
-ON CONFLICT DO NOTHING;
-
