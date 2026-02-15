@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Layout from './components/layout/Layout'
 import HomePage from './pages/HomePage'
+import DashboardPage from './pages/DashboardPage'
 import ModulesPage from './pages/ModulesPage'
 import ModuleDetailPage from './pages/learning/ModuleDetailPage'
 import WeatherModulePage from './pages/learning/WeatherModule'
@@ -16,6 +17,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/modules" element={<ModulesPage />} />
           <Route path="/modules/:moduleId" element={<ModuleDetailPage />} />
           <Route path="/modules/weather" element={<WeatherModulePage />} />
