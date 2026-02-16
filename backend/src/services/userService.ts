@@ -66,3 +66,19 @@ export async function awardBadge(userId: string, badge: { id: string; name: stri
   )
   return result.rows[0]
 }
+
+// 获取用户徽章列表（兼容成就服务）
+export async function getUserBadges(userId: string): Promise<Array<{ badge_id: string; earned_at: string | null }>> {
+  const result = await db.query(
+    `SELECT badges FROM users WHERE id = $1`,
+    [userId]
+  )
+
+  const badges = (result.rows[0]?.badges ?? []) as Array<{ id?: string; earnedAt?: string | null }>
+  return badges
+    .filter((badge) => Boolean(badge.id))
+    .map((badge) => ({
+      badge_id: badge.id as string,
+      earned_at: badge.earnedAt ?? null,
+    }))
+}

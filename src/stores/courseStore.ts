@@ -1,13 +1,13 @@
 import { create } from 'zustand'
-import type { Module, Vocabulary, Sentence } from '../types'
+import type { Module } from '../types'
 
 interface CourseState {
   modules: Module[]
   currentModule: Module | null
-  
   setModules: (modules: Module[]) => void
   setCurrentModule: (module: Module | null) => void
   getModuleById: (id: string) => Module | undefined
+  getFullModule: (id: string) => Module | undefined
 }
 
 const mockModules: Module[] = [
@@ -21,12 +21,13 @@ const mockModules: Module[] = [
       { id: 'V1', moduleId: 'M1', word: 'wing', translation: '机翼', exampleSentence: 'The wing helps the plane fly.' },
       { id: 'V2', moduleId: 'M1', word: 'cockpit', translation: '驾驶舱', exampleSentence: 'The pilot sits in the cockpit.' },
       { id: 'V3', moduleId: 'M1', word: 'runway', translation: '跑道', exampleSentence: 'The plane is on the runway.' },
-      { id: 'V4', moduleId: 'M1', word: 'engine', translation: '发动机', exampleSentence: 'The engine makes the plane fly.' }
+      { id: 'V4', moduleId: 'M1', word: 'engine', translation: '发动机', exampleSentence: 'The engine powers the aircraft.' },
     ],
     sentences: [
       { id: 'S1', moduleId: 'M1', english: 'Where is the gate?', chinese: '登机口在哪里？' },
-     S2', module { id: 'Id: 'M1', english: 'How do I get to the terminal?', chinese: '我该怎么去航站楼？' }
-    ]
+      { id: 'S2', moduleId: 'M1', english: 'How do I get to the terminal?', chinese: '我该怎么去航站楼？' },
+      { id: 'S3', moduleId: 'M1', english: 'Please fasten your seatbelt.', chinese: '请系好安全带。' },
+    ],
   },
   {
     id: 'M2',
@@ -35,14 +36,15 @@ const mockModules: Module[] = [
     order: 2,
     icon: '🏢',
     vocabularies: [
-      { id: 'V5', moduleId: 'M2', word: 'terminal', translation: '航站楼', exampleSentence: 'The terminal is very big.' },
-      { id: 'V6', moduleId: 'M2', word: 'boarding pass', translation: '登机牌', exampleSentence: 'Show me your boarding pass.' },
-      { id: 'V7', moduleId: 'M2', word: 'security', translation: '安检', exampleSentence: 'Go through security please.' }
+      { id: 'V5', moduleId: 'M2', word: 'terminal', translation: '航站楼', exampleSentence: 'The terminal is very busy.' },
+      { id: 'V6', moduleId: 'M2', word: 'boarding pass', translation: '登机牌', exampleSentence: 'Please show your boarding pass.' },
+      { id: 'V7', moduleId: 'M2', word: 'security', translation: '安检', exampleSentence: 'Go through security please.' },
     ],
     sentences: [
-      { id: 'S3', moduleId: 'M2', english: 'Can I have a window seat?', chinese: '我可以要一个靠窗的座位吗？' },
-      { id: 'S4', moduleId: 'M2', english: 'What time does the flight board?', chinese: '航班什么时候登机？' }
-    ]
+      { id: 'S4', moduleId: 'M2', english: 'Can I have a window seat?', chinese: '我可以要一个靠窗的座位吗？' },
+      { id: 'S5', moduleId: 'M2', english: 'What time does boarding start?', chinese: '什么时候开始登机？' },
+      { id: 'S6', moduleId: 'M2', english: 'Where is baggage claim?', chinese: '行李提取处在哪里？' },
+    ],
   },
   {
     id: 'M3',
@@ -51,13 +53,15 @@ const mockModules: Module[] = [
     order: 3,
     icon: '📡',
     vocabularies: [
-      { id: 'V8', moduleId: 'M3', word: 'takeoff', translation: '起飞', exampleSentence: 'We are ready for takeoff.' },
-      { id: 'V9', moduleId: 'M3', word: 'landing', translation: '降落', exampleSentence: 'We are requesting landing.' }
+      { id: 'V8', moduleId: 'M3', word: 'takeoff', translation: '起飞', exampleSentence: 'Ready for takeoff.' },
+      { id: 'V9', moduleId: 'M3', word: 'landing', translation: '降落', exampleSentence: 'Request landing clearance.' },
+      { id: 'V10', moduleId: 'M3', word: 'clearance', translation: '许可', exampleSentence: 'Clearance granted.' },
     ],
     sentences: [
-      { id: 'S5', moduleId: 'M3', english: 'Ready for takeoff', chinese: '准备起飞' },
-      { id: 'S6', moduleId: 'M3', english: 'Request landing', chinese: '请求降落' }
-    ]
+      { id: 'S7', moduleId: 'M3', english: 'Ready for takeoff.', chinese: '准备起飞。' },
+      { id: 'S8', moduleId: 'M3', english: 'Request landing clearance.', chinese: '请求降落许可。' },
+      { id: 'S9', moduleId: 'M3', english: 'Maintain heading 090.', chinese: '保持航向090。' },
+    ],
   },
   {
     id: 'M4',
@@ -73,24 +77,24 @@ const mockModules: Module[] = [
       { id: 'VW5', moduleId: 'M4', word: 'ceiling', translation: '云幕高度', exampleSentence: 'Ceiling is 500 feet.' },
       { id: 'VW6', moduleId: 'M4', word: 'crosswind', translation: '侧风', exampleSentence: 'Crosswind on final approach.' },
       { id: 'VW7', moduleId: 'M4', word: 'headwind', translation: '逆风', exampleSentence: 'Headwind of 20 knots.' },
-      { id: 'VW8', moduleId: 'M4', word: 'tailwind', translation: '顺风', exampleSentence: 'Tailwind component is 5 knots.' }
+      { id: 'VW8', moduleId: 'M4', word: 'tailwind', translation: '顺风', exampleSentence: 'Tailwind component is 5 knots.' },
     ],
     sentences: [
       { id: 'SW1', moduleId: 'M4', english: 'What is the visibility?', chinese: '能见度是多少？' },
-      { id: 'SW2', moduleId: 'M4', english: 'Are there any thunderstorms on the route?', chinese: '航线上有雷暴吗？' },
-      { id: 'SW3', moduleId: 'M4', english: 'Expect turbulence during descent', chinese: '下降过程中预计有颠簸' },
-      { id: 'SW4', moduleId: 'M4', english: 'Wind is from the west at 15 knots', chinese: '风向西，风速15节' },
-      { id: 'SW5', moduleId: 'M4', english: 'Ceiling is 800 feet with broken clouds', chinese: '云幕高度800英尺，多云' },
-      { id: 'SW6', moduleId: 'M4', english: 'Runway visual range is 1000 meters', chinese: '跑道视程1000米' }
-    ]
-  }
+      { id: 'SW2', moduleId: 'M4', english: 'Are there thunderstorms on the route?', chinese: '航线上有雷暴吗？' },
+      { id: 'SW3', moduleId: 'M4', english: 'Expect turbulence during descent.', chinese: '下降过程中预计有颠簸。' },
+      { id: 'SW4', moduleId: 'M4', english: 'Wind is from the west at 15 knots.', chinese: '风向西，风速15节。' },
+      { id: 'SW5', moduleId: 'M4', english: 'Ceiling is 800 feet.', chinese: '云幕高度800英尺。' },
+      { id: 'SW6', moduleId: 'M4', english: 'Runway visual range is 1000 meters.', chinese: '跑道视程1000米。' },
+    ],
+  },
 ]
 
 export const useCourseStore = create<CourseState>()((set, get) => ({
   modules: mockModules,
   currentModule: null,
-  
   setModules: (modules) => set({ modules }),
   setCurrentModule: (module) => set({ currentModule: module }),
-  getModuleById: (id) => get().modules.find(m => m.id === id)
+  getModuleById: (id) => get().modules.find((m) => m.id === id),
+  getFullModule: (id) => get().modules.find((m) => m.id === id),
 }))

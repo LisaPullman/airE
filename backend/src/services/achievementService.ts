@@ -41,7 +41,7 @@ export async function getAllBadges() {
 
 // 检查并授予徽章
 export async function checkAndAwardBadges(userId: string) {
-  const awardedBadges = []
+  const awardedBadges: unknown[] = []
   
   // 获取用户当前状态
   const user = await db.query(`SELECT * FROM users WHERE id = $1`, [userId])
@@ -50,7 +50,7 @@ export async function checkAndAwardBadges(userId: string) {
   const userData = user.rows[0]
   
   // 检查模块完成徽章
-  const completedModules = await db.query(
+  await db.query(
     `SELECT DISTINCT module_id FROM learning_history 
      WHERE user_id = $1 AND action_type = 'module_complete'`,
     [userId]
@@ -58,7 +58,11 @@ export async function checkAndAwardBadges(userId: string) {
   
   // 检查连续学习天数
   if (userData.streak_days >= 7) {
-    const badge = await awardBadge(userId, 'full_attendance', '全勤飞行员')
+    const badge = await awardBadge(userId, {
+      id: 'full_attendance',
+      name: '全勤飞行员',
+      icon: '📅',
+    })
     if (badge) awardedBadges.push(badge)
   }
   
@@ -70,7 +74,11 @@ export async function checkAndAwardBadges(userId: string) {
   )
   
   if (parseInt(vocabCount.rows[0].count) >= 100) {
-    const badge = await awardBadge(userId, 'vocabulary_master', '词汇达人')
+    const badge = await awardBadge(userId, {
+      id: 'vocabulary_master',
+      name: '词汇达人',
+      icon: '📚',
+    })
     if (badge) awardedBadges.push(badge)
   }
   

@@ -90,7 +90,7 @@ export default function WeatherQuiz() {
         </Card>
         <div className="text-xl text-gray-700 mb-6">
           {score >= 80 ? '太棒了！你已经掌握航空天气知识！' : 
-           score >= 60 ? '不错！继续努力会更好！'}
+           score >= 60 ? '不错！继续努力会更好！' : '继续练习，你会进步很快！'}
         </div>
         <Button size="lg" variant="primary" onClick={() => {
           setCurrentQuestion(0)

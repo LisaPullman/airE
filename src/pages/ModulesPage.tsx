@@ -7,10 +7,11 @@ export default function ModulesPage() {
   const { modules } = useCourseStore()
   
   const handleModuleClick = (moduleId: string) => {
-    // 根据模块ID导航到对应页面
     if (moduleId === 'M4') {
       navigate('/modules/weather')
+      return
     }
+    navigate(`/modules/${moduleId}`)
   }
   
   return (
