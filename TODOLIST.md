@@ -20,10 +20,10 @@
 ## Phase 2: PostgreSQL 数据层 ✅ 已完成
 - [x] schema.sql (5张核心表)
 - [x] seed.sql (4个模块数据)
-- [x] db.ts 连接配置
-- [x] userService.ts
-- [x] courseService.ts
-- [x] goalService.ts
+- [x] db.ts 连接配置（已迁移至 backend/src/lib/db.ts）
+- [x] userService.ts（已迁移至 backend/src/services/userService.ts）
+- [x] courseService.ts（已迁移至 backend/src/services/courseService.ts）
+- [x] goalService.ts（已迁移至 backend/src/services/goalService.ts）
 
 ---
 
@@ -70,18 +70,18 @@
 
 ---
 
-## Phase 8: 个人中心 ⏳ 进行中
-- [ ] ProfileHeader 组件 - 头部信息
-- [ ] AvatarSelector 组件 - 头像选择
-- [ ] SettingsForm 组件 - 设置表单
+## Phase 8: 个人中心 ✅ 已完成
+- [x] ProfileHeader 组件 - 头部信息
+- [x] AvatarSelector 组件 - 头像选择
+- [x] SettingsForm 组件 - 设置表单
 - [x] ProfilePage 页面
 
 ---
 
-## Phase 9: PWA 支持
-- [ ] manifest.json 配置
-- [ ] Service Worker 配置
-- [ ] 离线缓存策略
+## Phase 9: PWA 支持 ✅ 已完成
+- [x] manifest.json 配置
+- [x] Service Worker 配置
+- [x] 离线缓存策略
 
 ---
 
@@ -89,6 +89,18 @@
 - [ ] GitHub Pages 部署
 - [ ] Vercel 部署
 - [ ] 自动化 CI/CD
+
+---
+
+## Phase 11: 工程稳定性与后端独立化 ✅ 已完成
+- [x] 安装依赖并验证 (`npm install && npm run build && npm run dev`)
+- [x] 生成并提交前端锁文件 (`package-lock.json`)
+- [x] 修复前端构建阻塞问题（语法/TS 配置）
+- [x] 拆分后端目录（`backend/src/lib`、`backend/src/services`）
+- [x] 新增后端独立工程配置（`backend/package.json`、`backend/tsconfig.json`）
+- [x] 新增后端 API 入口（`backend/src/server.ts`）
+- [x] 验证后端脚本（`backend` 的 `npm run dev/build/start`）
+- [x] 生成后端锁文件（`backend/package-lock.json`）
 
 ---
 
@@ -106,7 +118,7 @@
 - [x] AchievementsPage 成就页面
 - [x] ProfilePage 个人中心
 
-### 组件 (15个)
+### 组件 (18个)
 - [x] Button 按钮
 - [x] Card 卡片
 - [x] ProgressBar 进度条
@@ -118,12 +130,15 @@
 - [x] BadgeCard 徽章卡片
 - [x] TitleProgress 称号进度
 - [x] StatsCard 统计卡片
+- [x] ProfileHeader 个人信息头部
+- [x] AvatarSelector 头像选择器
+- [x] SettingsForm 设置表单
 
 ### 路由 (10个)
 - [x] / 首页
 - [x] /dashboard 仪表盘
 - [x] /modules 课程列表
-- [x] /modules/:id 模块详情
+- [x] /modules/:moduleId 模块详情
 - [x] /modules/weather 天气模块
 - [x] /practice 练习选择
 - [x] /practice/quiz 测验
@@ -141,10 +156,12 @@
 - [x] 支持选择题测验
 - [x] 6级航空称谓展示
 - [x] 进度条、仪表盘展示
-- [ ] PWA 离线功能待完成
+- [x] PWA 离线功能
 
 ### 技术验收
 - [x] 响应式设计
 - [x] 页面加载 < 2秒
 - [x] GitHub 部署完成
+- [x] 前端构建与开发服务验证完成
+- [x] 后端独立服务可运行（health/API 已验证）
 - [ ] Vercel 部署待完成

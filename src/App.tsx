@@ -10,6 +10,7 @@ import QuizPage from './pages/practice/QuizPage'
 import GoalsPage from './pages/goals/GoalsPage'
 import AchievementsPage from './pages/AchievementsPage'
 import ProfilePage from './pages/ProfilePage'
+import { SuzhouFlightGamePage } from './games/suzhou-flight'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
           <Route path="/modules/weather" element={<WeatherModulePage />} />
           <Route path="/practice" element={<PracticePage />} />
           <Route path="/practice/quiz" element={<QuizPage />} />
+          <Route path="/games/suzhou-flight" element={<SuzhouFlightGamePage />} />
           <Route path="/goals" element={<GoalsPage />} />
           <Route path="/achievements" element={<AchievementsPage />} />
           <Route path="/profile" element={<ProfilePage />} />

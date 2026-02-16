@@ -4,8 +4,8 @@
   "description": "成为小飞行员，学习航空英语！",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#e0f2fe",
-  "theme_color": "#3b82f6",
+  "background_color": "#87CEEB",
+  "theme_color": "#4F46E5",
   "orientation": "portrait-primary",
   "icons": [
     {

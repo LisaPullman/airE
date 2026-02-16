@@ -178,6 +178,7 @@ export default function QuizPage() {
       {/* 题目卡片 */}
       <Card>
         <ChoiceQuestion
+          key={currentQuestion.id}
           question={currentQuestion}
           onAnswer={handleAnswer}
         />

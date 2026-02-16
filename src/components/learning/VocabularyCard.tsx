@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Card from '../common/Card'
 import Button from '../common/Button'
 import type { Vocabulary } from '../../types'
+import { speak, stopSpeaking } from '../../lib/speech'
 
 interface VocabularyCardProps {
   vocabulary: Vocabulary
@@ -11,13 +12,33 @@ interface VocabularyCardProps {
 export default function VocabularyCard({ vocabulary, index }: VocabularyCardProps) {
   const [isFlipped, setIsFlipped] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
-  
-  const playAudio = () => {
+  const [playError, setPlayError] = useState<string | null>(null)
+
+  const playAudio = async () => {
+    setPlayError(null)
     setIsPlaying(true)
-    // 模拟音频播放
-    setTimeout(() => setIsPlaying(false), 1000)
+
+    try {
+      // 先播放英文单词
+      await speak(vocabulary.word, 'en-US')
+      // 短暂暂停后播放例句
+      await new Promise(resolve => setTimeout(resolve, 300))
+      if (vocabulary.exampleSentence) {
+        await speak(vocabulary.exampleSentence, 'en-US', () => {
+          setIsPlaying(false)
+        })
+      }
+    } catch (error) {
+      setPlayError('语音播放失败，请检查浏览器设置')
+      setIsPlaying(false)
+    }
   }
-  
+
+  const handleStop = () => {
+    stopSpeaking()
+    setIsPlaying(false)
+  }
+
   return (
     <div className="perspective-1000" onClick={() => setIsFlipped(!isFlipped)}>
       <div className={`relative w-full h-48 cursor-pointer transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
@@ -29,7 +50,7 @@ export default function VocabularyCard({ vocabulary, index }: VocabularyCardProp
             <p className="text-sm text-gray-500 mt-2">点击查看释义</p>
           </Card>
         </div>
-        
+
         {/* 背面 */}
         <div className="absolute inset-0 backface-hidden rotate-y-180">
           <Card className="h-full flex flex-col items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
@@ -38,21 +59,38 @@ export default function VocabularyCard({ vocabulary, index }: VocabularyCardProp
           </Card>
         </div>
       </div>
-      
+
       {/* 操作按钮 */}
       <div className="flex gap-2 mt-3 justify-center">
-        <Button 
-          size="sm" 
-          variant="secondary" 
-          onClick={(e) => {
-            e.stopPropagation()
-            playAudio()
-          }}
-          disabled={isPlaying}
-        >
-          {isPlaying ? '🔊 播放中...' : '🔊 发音'}
-        </Button>
+        {isPlaying ? (
+          <Button
+            size="sm"
+            variant="danger"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleStop()
+            }}
+          >
+            ⏹️ 停止
+          </Button>
+        ) : (
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={(e) => {
+              e.stopPropagation()
+              playAudio()
+            }}
+          >
+            🔊 发音
+          </Button>
+        )}
       </div>
+
+      {/* 错误提示 */}
+      {playError && (
+        <p className="text-red-500 text-sm text-center mt-2">{playError}</p>
+      )}
     </div>
   )
 }

@@ -6,9 +6,11 @@ interface UserState {
   user: User | null
   isLoggedIn: boolean
   goals: Goal[]
-  
+
   login: (user: User) => void
   logout: () => void
+  updateUser: (updates: Partial<User>) => void
+  updateAvatar: (avatar: string) => void
   addGoal: (goal: Goal) => void
   updateGoal: (goalId: string, updates: Partial<Goal>) => void
   completeGoal: (goalId: string) => void
@@ -25,7 +27,20 @@ export const useUserStore = create<UserState>()(
       
       login: (user) => set({ user, isLoggedIn: true }),
       logout: () => set({ user: null, isLoggedIn: false }),
-      
+
+      updateUser: (updates) => set((state) => {
+        if (!state.user) return state
+        return { user: { ...state.user, ...updates } }
+      }),
+
+      updateAvatar: (avatar) => set((state) => {
+        if (!state.user) return state
+        const badges = state.user.badges.length > 0
+          ? [{ ...state.user.badges[0], icon: avatar }, ...state.user.badges.slice(1)]
+          : [{ id: 'avatar', name: '头像', icon: avatar, earnedAt: new Date().toISOString() }]
+        return { user: { ...state.user, badges } }
+      }),
+
       addGoal: (goal) => set((state) => ({
         goals: [...state.goals, goal]
       })),

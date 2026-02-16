@@ -4,21 +4,26 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="airE - 航空英语学习平台，面向小学生的趣味英语学习应用" />
-    <meta name="theme-color" content="#3b82f6" />
+    <meta name="theme-color" content="#4F46E5" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="airE" />
-    
+
     <title>airE - 航空英语学习平台</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
-    
+
+    <!-- Google Fonts: Baloo 2 + Comic Neue -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Comic+Neue:wght@300;400;700&display=swap" rel="stylesheet">
+
     <style>
       /* 初始加载动画 */
       #loading {
         position: fixed;
         inset: 0;
-        background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 50%, #e0f7fa 100%);
+        background: linear-gradient(180deg, #87CEEB 0%, #E0F4FF 50%, #FFFFFF 100%);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -26,36 +31,105 @@
         z-index: 9999;
         transition: opacity 0.5s ease;
       }
-      
+
       #loading.hidden {
         opacity: 0;
         pointer-events: none;
       }
-      
-      .loading-icon {
-        font-size: 64px;
-        animation: bounce 2s infinite;
+
+      .loading-plane {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, #4F46E5 0%, #4A90D9 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.1);
+        animation: float 2s ease-in-out infinite;
       }
-      
+
+      .loading-plane svg {
+        width: 48px;
+        height: 48px;
+        fill: white;
+      }
+
       .loading-text {
-        margin-top: 16px;
-        font-size: 24px;
-        font-weight: bold;
-        color: #1e3a5f;
+        margin-top: 24px;
+        font-family: 'Baloo 2', cursive;
+        font-size: 32px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #4F46E5 0%, #4A90D9 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
-      
-      @keyframes bounce {
+
+      .loading-subtitle {
+        font-family: 'Comic Neue', cursive;
+        font-size: 16px;
+        color: #6B7280;
+        margin-top: 8px;
+      }
+
+      /* 装饰性云朵 */
+      .loading-cloud {
+        position: absolute;
+        opacity: 0.6;
+      }
+
+      .loading-cloud-1 {
+        top: 15%;
+        left: 10%;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .loading-cloud-2 {
+        top: 20%;
+        right: 15%;
+        animation: float 3s ease-in-out infinite 1s;
+      }
+
+      .loading-cloud-3 {
+        bottom: 25%;
+        left: 20%;
+        animation: float 3s ease-in-out infinite 2s;
+      }
+
+      .loading-cloud svg {
+        width: 80px;
+        height: 60px;
+        fill: white;
+      }
+
+      @keyframes float {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-20px); }
+        50% { transform: translateY(-15px); }
       }
     </style>
   </head>
   <body>
     <div id="loading">
-      <div class="loading-icon">✈️</div>
+      <!-- 装饰性云朵 -->
+      <div class="loading-cloud loading-cloud-1">
+        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+      </div>
+      <div class="loading-cloud loading-cloud-2">
+        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+      </div>
+      <div class="loading-cloud loading-cloud-3">
+        <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/></svg>
+      </div>
+
+      <!-- 飞机 Logo -->
+      <div class="loading-plane">
+        <svg viewBox="0 0 24 24"><path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></svg>
+      </div>
       <div class="loading-text">airE</div>
+      <div class="loading-subtitle">航空英语学习平台</div>
     </div>
-    
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
