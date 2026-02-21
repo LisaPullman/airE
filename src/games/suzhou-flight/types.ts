@@ -1,6 +1,6 @@
 import type * as THREE from 'three'
 
-export type AircraftType = 'jetliner' | 'fighter' | 'biplane'
+export type AircraftType = 'jetliner' | 'fighter' | 'biplane' | 'helicopter'
 
 export interface AircraftOption {
   id: AircraftType

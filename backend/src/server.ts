@@ -6,9 +6,11 @@ import {
   createGoal,
   getAllModules,
   getFullModule,
+  getQuizQuestions,
   getTodayStats,
   getUserById,
   getUserGoals,
+  submitPracticeAttempt,
 } from './services'
 
 dotenv.config()
@@ -101,6 +103,51 @@ app.get(
   asyncHandler(async (req, res) => {
     const stats = await getTodayStats(req.params.userId)
     res.json({ data: stats })
+  }),
+)
+
+app.get(
+  '/api/quiz/questions',
+  asyncHandler(async (req, res) => {
+    const moduleCode = typeof req.query.moduleCode === 'string' ? req.query.moduleCode : null
+    const limitRaw = typeof req.query.limit === 'string' ? Number(req.query.limit) : 5
+    const questions = await getQuizQuestions(moduleCode, Number.isFinite(limitRaw) ? limitRaw : 5)
+    res.json({ data: questions })
+  }),
+)
+
+app.post(
+  '/api/quiz/attempt',
+  asyncHandler(async (req, res) => {
+    const {
+      userId = null,
+      moduleCode = null,
+      questionId,
+      userAnswer,
+      isCorrect,
+      score = 0,
+      timeSpent = 0,
+    } = req.body ?? {}
+
+    if (!questionId || typeof userAnswer !== 'string' || typeof isCorrect !== 'boolean') {
+      res.status(400).json({
+        error: 'invalid_payload',
+        message: 'questionId, userAnswer(string), isCorrect(boolean) are required',
+      })
+      return
+    }
+
+    const record = await submitPracticeAttempt({
+      userId,
+      moduleCode,
+      questionId,
+      userAnswer,
+      isCorrect,
+      score: Number(score),
+      timeSpent: Number(timeSpent),
+    })
+
+    res.status(201).json({ data: record })
   }),
 )
 

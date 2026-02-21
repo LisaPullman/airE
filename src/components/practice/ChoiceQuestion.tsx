@@ -5,7 +5,7 @@ import type { Question } from '../../types'
 
 interface ChoiceQuestionProps {
   question: Question
-  onAnswer: (isCorrect: boolean) => void
+  onAnswer: (isCorrect: boolean, selectedAnswer: string) => void
 }
 
 export default function ChoiceQuestion({ question, onAnswer }: ChoiceQuestionProps) {
@@ -21,7 +21,7 @@ export default function ChoiceQuestion({ question, onAnswer }: ChoiceQuestionPro
     if (!selectedAnswer) return
     const isCorrect = selectedAnswer === question.correctAnswer
     setShowResult(true)
-    onAnswer(isCorrect)
+    onAnswer(isCorrect, selectedAnswer)
   }
   
   return (

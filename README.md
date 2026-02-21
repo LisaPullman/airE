@@ -137,20 +137,23 @@ npm run build
 cd backend && npm run build
 ```
 
-### 数据库初始化
+### 数据库初始化（Docker）
 
 ```bash
-# 创建数据库
-createdb aire_learning
+# 启动 PostgreSQL 容器（首次会自动执行 schema + seed）
+npm run db:up
 
-# 初始化表结构
+# 手动重刷表结构
 npm run db:init
 
-# 填充种子数据
+# 手动重刷种子数据
 npm run db:seed
 
-# 或一步完成
+# 一步重刷
 npm run db:reset
+
+# 进入 psql
+npm run db:psql
 ```
 
 ## 可用脚本
@@ -162,6 +165,10 @@ npm run db:reset
 | `npm run preview` | 预览构建结果 |
 | `npm run lint` | 代码检查 |
 | `npm run test` | 运行测试 |
+| `npm run db:up` | 启动本地 PostgreSQL（Docker） |
+| `npm run db:down` | 停止本地 PostgreSQL 容器 |
+| `npm run db:logs` | 查看 PostgreSQL 日志 |
+| `npm run db:psql` | 进入 PostgreSQL 命令行 |
 | `npm run db:init` | 初始化数据库 |
 | `npm run db:seed` | 填充种子数据 |
 | `npm run db:reset` | 重置数据库 |

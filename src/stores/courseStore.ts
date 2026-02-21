@@ -88,6 +88,27 @@ const mockModules: Module[] = [
       { id: 'SW6', moduleId: 'M4', english: 'Runway visual range is 1000 meters.', chinese: '跑道视程1000米。' },
     ],
   },
+  {
+    id: 'M5',
+    name: '紧急情况',
+    description: '学习紧急通话与应急处置英语',
+    order: 5,
+    icon: '🚨',
+    vocabularies: [
+      { id: 'VE1', moduleId: 'M5', word: 'MAYDAY', translation: '遇险呼叫', exampleSentence: 'MAYDAY, MAYDAY, MAYDAY.' },
+      { id: 'VE2', moduleId: 'M5', word: 'PAN-PAN', translation: '紧急呼叫', exampleSentence: 'PAN-PAN, low fuel, request priority.' },
+      { id: 'VE3', moduleId: 'M5', word: 'engine failure', translation: '发动机故障', exampleSentence: 'We have an engine failure.' },
+      { id: 'VE4', moduleId: 'M5', word: 'evacuate', translation: '紧急撤离', exampleSentence: 'Evacuate the aircraft immediately.' },
+      { id: 'VE5', moduleId: 'M5', word: 'divert', translation: '备降', exampleSentence: 'We need to divert to an alternate airport.' },
+      { id: 'VE6', moduleId: 'M5', word: 'go around', translation: '复飞', exampleSentence: 'Unable to land, going around.' },
+    ],
+    sentences: [
+      { id: 'SE1', moduleId: 'M5', english: 'Request immediate landing.', chinese: '请求立即降落。' },
+      { id: 'SE2', moduleId: 'M5', english: 'Emergency services standing by.', chinese: '应急救援已待命。' },
+      { id: 'SE3', moduleId: 'M5', english: 'Leave all luggage behind.', chinese: '请不要携带行李。' },
+      { id: 'SE4', moduleId: 'M5', english: 'Squawk seven seven zero zero.', chinese: '应答机设为7700。' },
+    ],
+  },
 ]
 
 export const useCourseStore = create<CourseState>()((set, get) => ({

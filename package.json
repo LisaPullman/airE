@@ -8,8 +8,12 @@
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx",
     "test": "vitest",
-    "db:init": "psql -U postgres -d aire_learning -f sql/schema.sql",
-    "db:seed": "psql -U postgres -d aire_learning -f sql/seed.sql",
+    "db:up": "docker compose -f sql/docker-compose.yml up -d",
+    "db:down": "docker compose -f sql/docker-compose.yml down",
+    "db:logs": "docker compose -f sql/docker-compose.yml logs -f postgres",
+    "db:psql": "docker compose -f sql/docker-compose.yml exec postgres psql -U postgres -d aire_learning",
+    "db:init": "docker compose -f sql/docker-compose.yml exec -T postgres psql -U postgres -d aire_learning -f /docker-entrypoint-initdb.d/01-schema.sql",
+    "db:seed": "docker compose -f sql/docker-compose.yml exec -T postgres psql -U postgres -d aire_learning -f /docker-entrypoint-initdb.d/02-seed.sql",
     "db:reset": "npm run db:init && npm run db:seed"
   },
   "dependencies": {

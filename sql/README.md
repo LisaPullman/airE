@@ -1,82 +1,98 @@
 # SQL 目录说明
 
+本目录包含 airE 项目的 PostgreSQL 全量本地方案（Docker + Schema + Seed）。
+
 ## 文件结构
 
-```
+```text
 sql/
-├── schema.sql      # 数据库表结构设计 (精简版 5张核心表)
-├── seed.sql        # 初始种子数据
-└── README.md       # 本说明文件
+├── docker-compose.yml  # 本地 PostgreSQL 容器编排
+├── schema.sql          # 表结构、约束、索引、触发器
+├── seed.sql            # 种子数据（可重复执行）
+├── .env.example        # 数据库环境变量示例
+└── README.md
 ```
 
-## 核心表 (5张)
+## 当前数据模型
 
-| 表名 | 说明 | 核心字段 |
-|-----|------|---------|
-| **users** | 用户表 | username, nickname, level, exp, badges(jsonb) |
-| **modules** | 课程模块 | code, name, description, vocab_count, sentence_count |
-| **vocabularies** | 词汇表 | word, translation, example_sentence |
-| **sentences** | 句型表 | english, chinese |
-| **goals** | 学习目标 | user_id, name, target_score, status, progress |
+### 核心业务表
 
-## 后续可添加的表
+- `users` 用户
+- `modules` 课程模块
+- `vocabularies` 词汇
+- `sentences` 句型
+- `questions` 题库
+- `goals` 学习目标
 
-| 表名 | 用途 | 添加时机 |
-|-----|------|---------|
-| questions | 测验题目库 | 练习功能扩展 |
-| practice_records | 练习记录 | 用户数据分析 |
-| learning_history | 学习历史 | 详细进度追踪 |
-| pilot_titles | 称号配置 | 前端配置即可 |
-| badge_configs | 徽章配置 | 前端配置即可 |
+### 练习与行为表
 
-## 使用方法
+- `practice_records` 练习记录
+- `learning_history` 学习历史
 
-### 1. 创建数据库
+## 快速开始（Docker）
 
-```sql
--- 连接到 PostgreSQL
-psql -U postgres
-
--- 创建数据库
-CREATE DATABASE aire_learning;
-\c aire_learning
-```
-
-### 2. 执行 Schema
+### 1. 启动数据库
 
 ```bash
-psql -U postgres -d aire_learning -f schema.sql
+docker compose -f sql/docker-compose.yml up -d
 ```
 
-### 3. 导入种子数据
+首次启动会自动执行：
+
+- `/docker-entrypoint-initdb.d/01-schema.sql`
+- `/docker-entrypoint-initdb.d/02-seed.sql`
+
+### 2. 查看状态与日志
 
 ```bash
-psql -U postgres -d aire_learning -f seed.sql
+docker compose -f sql/docker-compose.yml ps
+docker compose -f sql/docker-compose.yml logs -f postgres
 ```
 
-### 4. 使用 psql 命令行
+### 3. 进入 psql
 
 ```bash
-# 查看所有表
-\dt
-
-# 查看表结构
-\d users
-
-# 查看数据
-SELECT * FROM modules;
+docker compose -f sql/docker-compose.yml exec postgres psql -U postgres -d aire_learning
 ```
 
-## 数据库配置
+### 4. 手动重刷结构和数据
 
-在 `.env` 文件中配置数据库连接：
+```bash
+docker compose -f sql/docker-compose.yml exec -T postgres psql -U postgres -d aire_learning -f /docker-entrypoint-initdb.d/01-schema.sql
+docker compose -f sql/docker-compose.yml exec -T postgres psql -U postgres -d aire_learning -f /docker-entrypoint-initdb.d/02-seed.sql
+```
+
+### 5. 停止容器
+
+```bash
+docker compose -f sql/docker-compose.yml down
+```
+
+如果需要连同数据卷一起删除（危险操作）：
+
+```bash
+docker compose -f sql/docker-compose.yml down -v
+```
+
+## 后端连接配置
+
+后端默认连接串：
 
 ```env
-DATABASE_URL=postgresql://username:password@localhost:5432/aire_learning
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/aire_learning
 ```
 
-## 设计原则
+可参考 `sql/.env.example`。
 
-- **核心优先**: 只保留当前必要的表
-- **灵活扩展**: JSONB 字段支持灵活存储
-- **避免过度**: 后续按需添加，不提前设计
+## 验证 SQL
+
+启动后可执行：
+
+```sql
+\dt
+SELECT code, name FROM modules ORDER BY display_order;
+SELECT COUNT(*) FROM vocabularies;
+SELECT COUNT(*) FROM sentences;
+SELECT COUNT(*) FROM questions;
+SELECT COUNT(*) FROM practice_records;
+```
