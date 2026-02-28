@@ -61,6 +61,11 @@ export const useUserStore = create<UserState>()(
       
       addBadge: (badge) => set((state) => {
         if (!state.user) return state
+        // Prevent duplicate badges
+        const existingIds = new Set(state.user.badges.map(b => b.id))
+        if (existingIds.has(badge.id)) {
+          return state
+        }
         return {
           user: {
             ...state.user,

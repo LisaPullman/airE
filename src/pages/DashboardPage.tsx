@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Card, { StatCard } from '../components/common/Card'
 import Button from '../components/common/Button'
@@ -27,6 +28,16 @@ export default function DashboardPage() {
   const totalVocab = modules.reduce((sum, m) => sum + (m.vocabularies?.length || 0), 0)
   const totalSentences = modules.reduce((sum, m) => sum + (m.sentences?.length || 0), 0)
   const activeGoals = goals.filter(g => g.status === 'active').length
+
+  // Use useMemo to ensure consistent module progress (not random on every render)
+  const moduleProgressMap = useMemo(() => {
+    const map: Record<string, number> = {}
+    modules.forEach((module, index) => {
+      // Use module index-based pseudo-random for consistent display
+      map[module.id] = ((index * 17 + 23) % 100)
+    })
+    return map
+  }, [modules])
 
   const weeklyData = [
     { day: '周一', progress: 80, completed: true },
@@ -128,8 +139,7 @@ export default function DashboardPage() {
 
         <div className="space-y-4">
           {modules.map((module, index) => {
-            const moduleProgress = Math.floor(Math.random() * 100)
-            const progressColors = ['blue', 'mint', 'peach', 'lavender', 'pink']
+            const moduleProgress = moduleProgressMap[module.id] ?? 0
 
             return (
               <div

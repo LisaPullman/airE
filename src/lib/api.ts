@@ -10,20 +10,33 @@ export interface QuizQuestionApi {
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) || 'http://localhost:3001'
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(init?.headers ?? {}),
-    },
-    ...init,
-  })
+  try {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        ...(init?.headers ?? {}),
+      },
+      ...init,
+    })
 
-  if (!response.ok) {
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(text || `request_failed:${response.status}`)
+    }
+
+    // Handle empty responses
     const text = await response.text()
-    throw new Error(text || `request_failed:${response.status}`)
-  }
+    if (!text) {
+      return undefined as T
+    }
 
-  return response.json() as Promise<T>
+    return JSON.parse(text) as T
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new Error('网络连接失败，请检查网络')
+    }
+    throw error
+  }
 }
 
 export async function fetchQuizQuestions(moduleCode: string | null, limit = 5): Promise<QuizQuestionApi[]> {

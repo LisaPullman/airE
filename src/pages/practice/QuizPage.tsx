@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams, useNavigate } from 'react-router-dom'
 import Card from '../../components/common/Card'
 import Button from '../../components/common/Button'
@@ -44,6 +44,10 @@ export default function QuizPage() {
   const [loadError, setLoadError] = useState<string | null>(null)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Use ref to avoid effect dependency issues
+  const recordsRef = useRef(records)
+  recordsRef.current = records
 
   const loadQuestions = useCallback(async () => {
     setLoading(true)
@@ -115,8 +119,8 @@ export default function QuizPage() {
   const handleFinish = useCallback(() => {
     if (showResult) return
     setShowResult(true)
-    void submitRecords(records)
-  }, [records, showResult, submitRecords])
+    void submitRecords(recordsRef.current)
+  }, [showResult, submitRecords])
 
   useEffect(() => {
     if (showResult || loading) return
@@ -124,7 +128,8 @@ export default function QuizPage() {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          handleFinish()
+          // Use setTimeout to avoid calling handleFinish during state update
+          setTimeout(() => handleFinish(), 0)
           return 0
         }
         return prev - 1
