@@ -88,7 +88,7 @@ export const useUserStore = create<UserState>()(
       })
     }),
     {
-      name: 'airE-user-storage'
+      name: 'takeoff-aviation-user-storage'
     }
   )
 )

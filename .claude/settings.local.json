@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run db:up)",
+      "Bash(sleep 30 && docker compose -f sql/docker-compose.yml ps)",
+      "Bash(test -d node_modules && echo \"Frontend deps installed\" || npm install)",
+      "Bash(cd backend && npm run dev)",
+      "Bash(npm run dev)",
+      "Bash(sleep 5 && curl -s http://localhost:3001/health | head -20)",
+      "Bash(sleep 5 && curl -s http://localhost:5173 | head -20)",
+      "Bash(curl -s http://localhost:3001/health/db)",
+      "Bash(sleep 5 && curl -s http://localhost:3001/health)",
+      "Bash(sleep 3 && curl -s http://localhost:5173 | head -10)",
+      "Bash(curl -s http://localhost:5173 | grep -E \"\\(起飞航空|airE\\)\" | head -5)",
+      "Bash(docker compose -f sql/docker-compose.yml ps)",
+      "Bash(npm run db:psql -c \"SELECT COUNT\\(*\\) FROM modules;\")",
+      "Bash(docker compose -f sql/docker-compose.yml exec -T postgres psql -U postgres -d aire_learning -c \"SELECT code, name FROM modules ORDER BY display_order;\")",
+      "Bash(curl -s http://localhost:5173 | head -5)"
+    ]
+  }
+}

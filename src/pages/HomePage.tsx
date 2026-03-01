@@ -69,10 +69,10 @@ export default function HomePage() {
           </div>
 
           {/* 欢迎语 */}
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-aviation-navy mb-4 animate-takeoff">
-            欢迎来到 airE
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold text-aviation-navy mb-4 animate-takeoff">
+            欢迎来到 起飞航空
           </h1>
-          <p className="text-xl text-aviation-dark mb-2 font-body animate-takeoff" style={{ animationDelay: '0.1s' }}>
+          <p className="text-lg sm:text-xl text-aviation-dark mb-2 font-body animate-takeoff" style={{ animationDelay: '0.1s' }}>
             航空英语学习平台
           </p>
           <p className="text-gray-600 mb-8 font-body animate-takeoff" style={{ animationDelay: '0.2s' }}>
@@ -80,7 +80,7 @@ export default function HomePage() {
           </p>
 
           {/* CTA 按钮 */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-takeoff" style={{ animationDelay: '0.3s' }}>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center animate-takeoff w-full px-4 sm:w-auto sm:px-0" style={{ animationDelay: '0.3s' }}>
             <Link to="/modules">
               <Button size="lg" icon={<RocketIcon className="w-6 h-6" />}>
                 开始飞行学习
@@ -140,7 +140,7 @@ export default function HomePage() {
           </div>
 
           {/* 模块卡片网格 */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {modules.map((module, index) => (
               <ModuleCard
                 key={module.id}
@@ -161,7 +161,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
             <h2 className="text-2xl font-display font-bold text-aviation-navy mb-2">
-              为什么选择 airE？
+              为什么选择 起飞航空？
             </h2>
           </div>
 

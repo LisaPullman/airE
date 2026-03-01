@@ -52,12 +52,12 @@ export default function GoalsPage() {
   return (
     <div className="space-y-6">
       {/* 页面头部 */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-aviation-blue">🎯 学习目标</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-aviation-blue">🎯 学习目标</h1>
           <p className="text-gray-600 mt-1">设定目标，迈向成功</p>
         </div>
-        <Button onClick={() => setShowForm(true)} variant="primary">
+        <Button onClick={() => setShowForm(true)} variant="primary" className="w-full sm:w-auto">
           + 创建目标
         </Button>
       </div>
@@ -71,7 +71,7 @@ export default function GoalsPage() {
       )}
       
       {/* 统计卡片 */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
         <Card className="text-center">
           <div className="text-3xl font-bold text-blue-600">{activeGoals.length}</div>
           <div className="text-gray-600">进行中</div>
@@ -87,22 +87,25 @@ export default function GoalsPage() {
       </div>
       
       {/* 筛选标签 */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <Button
           variant={filter === 'all' ? 'primary' : 'secondary'}
           onClick={() => setFilter('all')}
+          className="flex-1 min-w-20"
         >
           全部 ({goals.length})
         </Button>
         <Button
           variant={filter === 'active' ? 'primary' : 'secondary'}
           onClick={() => setFilter('active')}
+          className="flex-1 min-w-20"
         >
           进行中 ({activeGoals.length})
         </Button>
         <Button
           variant={filter === 'completed' ? 'primary' : 'secondary'}
           onClick={() => setFilter('completed')}
+          className="flex-1 min-w-20"
         >
           已完成 ({completedGoals.length})
         </Button>

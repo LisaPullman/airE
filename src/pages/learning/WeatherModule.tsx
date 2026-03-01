@@ -14,14 +14,14 @@ export default function WeatherModule() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="text-center py-6">
-        <div className="text-6xl mb-4">🌤️</div>
-        <h1 className="text-3xl font-bold text-aviation-blue">航空天气</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="text-center py-4 sm:py-6">
+        <div className="text-5xl sm:text-6xl mb-4">🌤️</div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-aviation-blue">航空天气</h1>
         <p className="text-gray-600 mt-2">了解天气对飞行的影响，掌握天气英语表达</p>
       </div>
 
-      <div className="flex gap-2 justify-center">
+      <div className="flex gap-2 justify-center flex-wrap">
         <Button
           variant={activeTab === 'vocab' ? 'primary' : 'secondary'}
           onClick={() => setActiveTab('vocab')}

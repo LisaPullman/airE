@@ -5,5 +5,5 @@ const isGitHubActions = process.env.GITHUB_ACTIONS === 'true'
 
 export default defineConfig({
   plugins: [react()],
-  base: isGitHubActions ? '/airE/' : '/',
+  base: isGitHubActions ? '/takeoff-aviation/' : '/',
 })

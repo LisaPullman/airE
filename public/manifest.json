@@ -1,6 +1,6 @@
 {
-  "name": "airE - 航空英语学习平台",
-  "short_name": "airE",
+  "name": "起飞航空 - 航空英语学习平台",
+  "short_name": "起飞航空",
   "description": "成为小飞行员，学习航空英语！",
   "start_url": "/",
   "display": "standalone",

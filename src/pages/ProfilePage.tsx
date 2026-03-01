@@ -35,9 +35,9 @@ export default function ProfilePage() {
   const currentAvatar = user?.badges[0]?.icon || '🧑‍✈️'
 
   return (
-    <div className="space-y-6 pb-8">
+    <div className="space-y-4 sm:space-y-6 pb-20 sm:pb-8">
       <div className="text-center py-4">
-        <h1 className="text-2xl font-bold text-aviation-blue">个人中心</h1>
+        <h1 className="text-xl sm:text-2xl font-bold text-aviation-blue">个人中心</h1>
         <p className="text-gray-500 text-sm mt-1">查看你的学习档案与学习数据</p>
       </div>
 
@@ -125,7 +125,7 @@ export default function ProfilePage() {
         <Card>
           <div className="text-center py-8 space-y-4">
             <div className="text-6xl">🧑‍✈️</div>
-            <h2 className="text-xl font-bold text-gray-800">欢迎使用 airE</h2>
+            <h2 className="text-xl font-bold text-gray-800">欢迎使用 起飞航空</h2>
             <p className="text-gray-600">
               登录后可查看个人学习数据、设置学习目标、获得成就徽章。
             </p>

@@ -66,7 +66,7 @@ export default function DashboardPage() {
       </div>
 
       {/* 统计卡片 */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-3 md:gap-4">
         <StatCard
           icon={<BookIcon className="w-6 h-6" />}
           value={totalVocab}
@@ -102,13 +102,14 @@ export default function DashboardPage() {
           <h3 className="text-xl font-display font-bold text-aviation-navy">本周学习进度</h3>
         </div>
 
-        <div className="flex justify-between gap-2">
+        <div className="flex justify-between gap-1 sm:gap-2 overflow-x-auto pb-2">
           {weeklyData.map((day, index) => (
-            <div key={day.day} className="flex-1 text-center">
-              <div className="text-xs text-gray-500 mb-2 font-medium">{day.day}</div>
+            <div key={day.day} className="flex-shrink-0 text-center w-10 sm:w-auto sm:flex-1">
+              <div className="text-xs text-gray-500 mb-2 font-medium hidden sm:block">{day.day}</div>
+              <div className="text-xs text-gray-500 mb-2 font-medium sm:hidden">{day.day.slice(1)}</div>
               <div className="h-24 flex items-end justify-center">
                 <div
-                  className={`w-8 rounded-t-xl transition-all duration-500 ${
+                  className={`w-6 sm:w-8 rounded-t-xl transition-all duration-500 ${
                     day.completed
                       ? 'bg-gradient-to-t from-success to-green-300'
                       : 'bg-gradient-to-t from-aviation-sky to-blue-200'
@@ -251,7 +252,7 @@ export default function DashboardPage() {
               <div
                 key={module.id}
                 onClick={() => navigate(`/modules/${module.id}`)}
-                className={`flex-shrink-0 w-40 p-5 bg-gradient-to-br ${bgColors[index % 4]} rounded-3xl text-center cursor-pointer hover:shadow-clay-lg hover:-translate-y-1 transition-all group`}
+                className={`flex-shrink-0 w-36 sm:w-40 p-4 sm:p-5 bg-gradient-to-br ${bgColors[index % 4]} rounded-3xl text-center cursor-pointer hover:shadow-clay-lg hover:-translate-y-1 transition-all group`}
               >
                 <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">
                   {module.icon}

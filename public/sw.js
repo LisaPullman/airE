@@ -1,5 +1,5 @@
-// Service Worker for airE PWA
-const CACHE_NAME = 'airE-v1';
+// Service Worker for 起飞航空 PWA
+const CACHE_NAME = 'takeoff-aviation-v1';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

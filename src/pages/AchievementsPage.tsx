@@ -21,9 +21,9 @@ export default function AchievementsPage() {
   const earnedIds = new Set((user?.badges ?? []).map((b) => b.id))
 
   return (
-    <div className="space-y-6">
-      <div className="text-center py-6">
-        <h1 className="text-3xl font-bold text-aviation-blue">🏆 成就中心</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="text-center py-4 sm:py-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-aviation-blue">🏆 成就中心</h1>
         <p className="text-gray-600 mt-2">解锁徽章，升级你的飞行称号</p>
       </div>
 

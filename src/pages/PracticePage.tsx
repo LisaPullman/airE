@@ -8,13 +8,13 @@ export default function PracticePage() {
   const { modules } = useCourseStore()
 
   return (
-    <div className="space-y-6">
-      <div className="text-center py-6">
-        <h1 className="text-3xl font-bold text-aviation-blue">✍️ 练习中心</h1>
+    <div className="space-y-4 sm:space-y-6">
+      <div className="text-center py-4 sm:py-6">
+        <h1 className="text-2xl sm:text-3xl font-bold text-aviation-blue">✍️ 练习中心</h1>
         <p className="text-gray-600 mt-2">选择练习模式巩固你的学习成果</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
         <Card hover>
           <h3 className="text-xl font-bold text-gray-800">综合测验</h3>
           <p className="text-gray-600 mt-2">随机题目，60 秒完成 5 题。</p>

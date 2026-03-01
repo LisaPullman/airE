@@ -36,18 +36,18 @@ export default function ModuleDetailPage() {
         <p className="text-gray-600 mt-2">{module.description}</p>
       </div>
 
-      <div className="flex justify-center gap-8">
+      <div className="flex justify-center gap-4 sm:gap-8">
         <div className="text-center">
-          <div className="text-3xl font-bold text-blue-600">{module.vocabularies.length}</div>
-          <div className="text-gray-600">词汇</div>
+          <div className="text-2xl sm:text-3xl font-bold text-blue-600">{module.vocabularies.length}</div>
+          <div className="text-sm sm:text-base text-gray-600">词汇</div>
         </div>
         <div className="text-center">
-          <div className="text-3xl font-bold text-green-600">{module.sentences.length}</div>
-          <div className="text-gray-600">句型</div>
+          <div className="text-2xl sm:text-3xl font-bold text-green-600">{module.sentences.length}</div>
+          <div className="text-sm sm:text-base text-gray-600">句型</div>
         </div>
       </div>
 
-      <div className="flex justify-center gap-2">
+      <div className="flex justify-center gap-2 flex-wrap">
         <Button
           variant={activeTab === 'vocab' ? 'primary' : 'secondary'}
           onClick={() => setActiveTab('vocab')}

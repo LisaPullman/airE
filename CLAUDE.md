@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**airE** is an aviation English learning application for elementary school students. It features goal-driven learning, interactive quizzes, and an achievement system with aviation-themed titles.
+**起飞航空 (Takeoff Aviation)** is an aviation English learning application for elementary school students. It features goal-driven learning, interactive quizzes, and an achievement system with aviation-themed titles.
 
 ## Common Commands
 
@@ -50,7 +50,7 @@ npm run db:reset     # Reinitialize database (init + seed)
 
 ### State Management
 - **courseStore** (`src/stores/courseStore.ts`): In-memory module/vocabulary data (mock)
-- **userStore** (`src/stores/userStore.ts`): Persisted to localStorage (`airE-user-storage`)
+- **userStore** (`src/stores/userStore.ts`): Persisted to localStorage (`takeoff-aviation-user-storage`)
 
 ### Backend Service Layer
 Business logic is separated into service modules in `backend/src/services/`:

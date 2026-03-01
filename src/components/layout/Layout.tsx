@@ -43,7 +43,7 @@ export default function Layout({ children }: LayoutProps) {
                   <PlaneIcon className="w-6 h-6 text-white" />
                 </div>
                 <span className="text-xl font-display font-bold bg-gradient-to-r from-aviation-blue to-aviation-light bg-clip-text text-transparent">
-                  airE
+                  起飞航空
                 </span>
               </Link>
 

@@ -37,7 +37,7 @@ export default function Card({
   return (
     <div
       className={`
-        rounded-3xl p-6
+        rounded-3xl p-4 sm:p-6
         ${whiteBg}
         ${baseColor}
         ${variantStyles[variant]}
@@ -72,9 +72,9 @@ export function StatCard({
   }
 
   return (
-    <div className={`rounded-2xl p-4 bg-gradient-to-br ${colorClasses[color]} shadow-clay`}>
-      <div className="text-2xl mb-2">{icon}</div>
-      <div className="text-2xl font-display font-bold">{value}</div>
+    <div className={`rounded-2xl p-3 sm:p-4 bg-gradient-to-br ${colorClasses[color]} shadow-clay`}>
+      <div className="text-xl sm:text-2xl mb-2">{icon}</div>
+      <div className="text-xl sm:text-2xl font-display font-bold">{value}</div>
       <div className="text-sm opacity-80">{label}</div>
     </div>
   )
@@ -109,7 +109,7 @@ export function ModuleCard({
       onClick={onClick}
       className={`
         relative overflow-hidden
-        rounded-3xl p-6
+        rounded-3xl p-4 sm:p-6
         bg-gradient-to-br ${colorClasses[color]}
         shadow-clay hover:shadow-clay-lg
         cursor-pointer

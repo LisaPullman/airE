@@ -31,7 +31,7 @@ const asyncHandler =
 app.get('/health', (_req, res) => {
   res.json({
     status: 'ok',
-    service: 'airE-backend',
+    service: 'takeoff-aviation-backend',
     timestamp: new Date().toISOString(),
   })
 })

@@ -218,9 +218,9 @@ export default function QuizPage() {
   if (showResult) {
     const level = getScoreLevel()
     return (
-      <div className="text-center py-10 space-y-6">
-        <div className="text-8xl mb-4">🎉</div>
-        <h1 className="text-3xl font-bold text-aviation-blue">测验完成！</h1>
+      <div className="text-center py-6 sm:py-10 space-y-4 sm:space-y-6">
+        <div className="text-6xl sm:text-8xl mb-4">🎉</div>
+        <h1 className="text-2xl sm:text-3xl font-bold text-aviation-blue">测验完成！</h1>
 
         <Card className="max-w-md mx-auto">
           <div className="text-6xl font-bold text-aviation-blue mb-2">{score}%</div>
@@ -235,7 +235,7 @@ export default function QuizPage() {
           {submitError && <div className="mt-2 text-sm text-red-600">{submitError}</div>}
         </Card>
 
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
           <Button variant="secondary" onClick={() => navigate('/practice')}>
             返回练习
           </Button>
@@ -248,18 +248,18 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex items-center gap-2 sm:gap-4">
         <Button variant="secondary" size="sm" onClick={() => navigate(-1)}>
           ← 返回
         </Button>
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           <ProgressBar value={progress} max={100} />
         </div>
-        <div className="text-sm text-gray-600">
+        <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">
           {currentIndex + 1} / {totalQuestions}
         </div>
-        <div className="text-sm text-gray-600">⏱️ {timeLeft}s</div>
+        <div className="text-xs sm:text-sm text-gray-600 whitespace-nowrap">⏱️ {timeLeft}s</div>
       </div>
 
       {module && (
