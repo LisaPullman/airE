@@ -41,7 +41,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-AirE@2026Secure}@postgres:5432/${POSTGRES_DB:-aire_learning}
       BACKEND_PORT: 3001
       NODE_ENV: production
-      CORS_ORIGIN: ${CORS_ORIGIN:-http://43.143.108.114}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://43.143.108.114:3000}
     depends_on:
       - postgres
     ports:
@@ -64,14 +64,14 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://43.143.108.114/aire-api}
-        VITE_BASE_PATH: /aire/
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://43.143.108.114:3000/api}
+        VITE_BASE_PATH: /
     container_name: aire-frontend
     restart: unless-stopped
     depends_on:
       - backend
     ports:
-      - "127.0.0.1:8082:80"    # 对主机暴露，供调试
+      - "127.0.0.1:8082:80"  # qifei nginx 通过 docker 网络代理到此，仅本机访问
     healthcheck:
       test: ["CMD", "curl", "-sf", "http://127.0.0.1:80/health"]
       interval: 15s
