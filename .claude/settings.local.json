@@ -15,7 +15,24 @@
       "Bash(docker compose -f sql/docker-compose.yml ps)",
       "Bash(npm run db:psql -c \"SELECT COUNT\\(*\\) FROM modules;\")",
       "Bash(docker compose -f sql/docker-compose.yml exec -T postgres psql -U postgres -d aire_learning -c \"SELECT code, name FROM modules ORDER BY display_order;\")",
-      "Bash(curl -s http://localhost:5173 | head -5)"
+      "Bash(curl -s http://localhost:5173 | head -5)",
+      "Bash(docker compose -f sql/docker-compose.yml down)",
+      "Bash(docker volume rm aire-sql_aire_pg_data 2>/dev/null || docker volume ls | grep aire)",
+      "Bash(docker volume rm aire-sql_aire_pg_data)",
+      "Bash(sleep 3 && docker compose -f sql/docker-compose.yml logs postgres)",
+      "Bash(docker compose -f sql/docker-compose.yml exec postgres psql -U postgres -d aire_learning -c \"SELECT version\\(\\);\")",
+      "Bash(docker compose -f sql/docker-compose.yml exec postgres psql -U postgres -d aire_learning -c \"SELECT COUNT\\(*\\) as modules FROM modules; SELECT COUNT\\(*\\) as vocab FROM vocabularies; SELECT COUNT\\(*\\) as questions FROM questions;\")",
+      "Bash(lsof -ti:3001 | xargs kill -9 2>/dev/null; lsof -ti:5173 | xargs kill -9 2>/dev/null; echo \"Ports cleared\")",
+      "Bash(lsof -i:3001 -i:5173 -i:5433)",
+      "Bash(curl -s http://localhost:3001/health | head -5)",
+      "Bash(test -f /Users/foxai/Desktop/QF/airE/node_modules && echo \"前端依赖已安装\" || echo \"前端依赖未安装\")",
+      "Bash(test -f /Users/foxai/Desktop/QF/airE/backend/node_modules && echo \"后端依赖已安装\" || echo \"后端依赖未安装\")",
+      "Bash(docker network ls | grep -E \"aerospace|qifei\" || echo \"网络不存在\")",
+      "Bash(docker compose up -d)",
+      "Bash(npm install)",
+      "Bash(lsof -ti:3001 | xargs kill -9 2>/dev/null || true)",
+      "Bash(sleep 3 && curl -s http://localhost:3001/health && echo \" - 后端健康\" || echo \"后端未就绪\")",
+      "Bash(sleep 3 && curl -s http://localhost:5173 > /dev/null && echo \"前端运行中 \\(端口 5173\\)\" || echo \"前端未就绪\")"
     ]
   }
 }

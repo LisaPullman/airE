@@ -22,17 +22,28 @@ cd backend && npm install    # Install backend dependencies
 cd backend && npm run dev    # Start with hot reload (localhost:3001)
 cd backend && npm run build  # Compile TypeScript -> dist/
 cd backend && npm run start  # Run compiled server
+cd backend && npm run typecheck  # TypeScript check without emitting files
 ```
 
 ### Database (Docker)
 ```bash
-npm run db:up        # Start PostgreSQL container
+npm run db:up        # Start PostgreSQL container (port 5433)
 npm run db:down      # Stop container
+npm run db:logs      # View PostgreSQL logs
 npm run db:psql      # Open psql shell
 npm run db:init      # Run schema.sql
 npm run db:seed      # Run seed.sql
 npm run db:reset     # Reinitialize database (init + seed)
 ```
+
+### Full Stack Docker
+```bash
+docker compose up -d         # Start frontend + backend + postgres
+docker compose down          # Stop all services
+docker compose logs -f       # View all logs
+```
+
+Note: Docker PostgreSQL uses port **5433** (not 5432) to avoid conflicts with other services.
 
 ## Architecture
 
@@ -104,7 +115,7 @@ VITE_API_BASE_URL=http://localhost:3001
 ### Backend (backend/.env)
 ```
 BACKEND_PORT=3001
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/aire_learning
+DATABASE_URL=postgresql://postgres:postgres@localhost:5433/aire_learning  # Use 5433 for Docker
 CORS_ORIGIN=http://127.0.0.1:5173
 ```
 
@@ -152,5 +163,24 @@ import { fetchQuizQuestions, submitQuizAttempt } from '@/lib/api'
 
 ## Deployment
 
-- **Frontend**: GitHub Pages via `.github/workflows/deploy.yml` or Vercel via `vercel.json`
-- **Backend**: Requires PostgreSQL database connection
+### Docker (Recommended for Production)
+```bash
+docker compose up -d    # Start all services (frontend on :8082, backend on :3001, postgres on :5433)
+```
+
+The Docker setup includes:
+- **Frontend**: Nginx serving static React build
+- **Backend**: Express.js API server
+- **Database**: PostgreSQL 16
+- **Network**: Connects to external `aerospace-network` for main project integration
+
+### Static Hosting
+- **GitHub Pages**: Via `.github/workflows/deploy.yml` (base path: `/takeoff-aviation/`)
+- **Vercel**: Via `vercel.json` configuration
+- Note: Static hosting requires backend/database to be hosted separately
+
+### Environment Variables for Docker
+- `VITE_API_BASE_URL` - Backend API URL (default: `http://43.143.108.114/aire-api`)
+- `VITE_BASE_PATH` - Frontend base path (default: `/aire/`)
+- `POSTGRES_PASSWORD` - Database password (default: `AirE@2026Secure`)
+- `CORS_ORIGIN` - CORS allowed origin

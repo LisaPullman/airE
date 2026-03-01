@@ -12,9 +12,12 @@ import AchievementsPage from './pages/AchievementsPage'
 import ProfilePage from './pages/ProfilePage'
 import { SuzhouFlightGamePage } from './games/suzhou-flight'
 
+// import.meta.env.BASE_URL 由 Vite base 设置（生产构建为 /aire/，本地为 /）
+const basename = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '/'
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Layout>
         <Routes>
           <Route path="/" element={<HomePage />} />

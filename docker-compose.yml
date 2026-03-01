@@ -1,0 +1,93 @@
+version: '3.8'
+# project name 默认为目录名 "aire"（volumes 前缀为 aire_）
+
+services:
+  # -----------------------------------------------
+  # PostgreSQL 数据库 (内部仅 127.0.0.1:5433，与主项目 5432 不冲突)
+  # -----------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: aire-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-aire_learning}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-AirE@2026Secure}
+    ports:
+      - "127.0.0.1:5433:5432"   # 与主项目 5432 不冲突
+    volumes:
+      - aire_pg_data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./sql/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-aire_learning}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    networks:
+      - aire-network
+
+  # -----------------------------------------------
+  # Express 后端 (内部 127.0.0.1:3001)
+  # 加入 aerospace-network 以便主项目 nginx 可反代
+  # -----------------------------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: aire-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-AirE@2026Secure}@postgres:5432/${POSTGRES_DB:-aire_learning}
+      BACKEND_PORT: 3001
+      NODE_ENV: production
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://43.143.108.114}
+    depends_on:
+      - postgres
+    ports:
+      - "127.0.0.1:3001:3001"   # 对主机暴露，供调试
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aire-network
+      - aerospace-network   # 加入主项目网络，让 nginx 容器可访问
+
+  # -----------------------------------------------
+  # React 前端静态站 (内部 127.0.0.1:8082)
+  # 加入 aerospace-network 以便主项目 nginx 可反代
+  # -----------------------------------------------
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://43.143.108.114/aire-api}
+        VITE_BASE_PATH: /aire/
+    container_name: aire-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "127.0.0.1:8082:80"    # 对主机暴露，供调试
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://127.0.0.1:80/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+    networks:
+      - aire-network
+      - aerospace-network   # 加入主项目网络，让 nginx 容器可访问
+
+volumes:
+  aire_pg_data:
+    driver: local
+
+networks:
+  aire-network:
+    driver: bridge
+  aerospace-network:
+    external:
+      name: qifei_aerospace-network   # 复用主项目已建立的 Docker 网络
