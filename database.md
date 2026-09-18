@@ -1,6 +1,6 @@
 # Database Overview
 
-PostgreSQL 16 Database: aire_learning
+PostgreSQL 18 Database: aire_learning
 
 ## Tables Summary
 

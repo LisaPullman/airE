@@ -6,7 +6,7 @@ services:
   # PostgreSQL 数据库 (内部仅 127.0.0.1:5433，与主项目 5432 不冲突)
   # -----------------------------------------------
   postgres:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     container_name: aire-postgres
     restart: unless-stopped
     environment:
@@ -16,7 +16,8 @@ services:
     ports:
       - "127.0.0.1:5433:5432"   # 与主项目 5432 不冲突
     volumes:
-      - aire_pg_data:/var/lib/postgresql/data
+      # PG18+ 约定：挂 /var/lib/postgresql，数据存放在版本子目录，便于 pg_upgrade
+      - aire_pg_data:/var/lib/postgresql
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
       - ./sql/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
     healthcheck:
@@ -64,8 +65,9 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://43.143.108.114:3000/api}
-        VITE_BASE_PATH: /
+        # 默认空值 → 前端走 api.ts 相对路径回退（/aire/api，同源 nginx 反代，任意入口通用）
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-}
+        VITE_BASE_PATH: ${VITE_BASE_PATH:-/}
     container_name: aire-frontend
     restart: unless-stopped
     depends_on:

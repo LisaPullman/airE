@@ -57,7 +57,7 @@ Note: Docker PostgreSQL uses port **5433** (not 5432) to avoid conflicts with ot
 |-------|------------|
 | Frontend | React 18, TypeScript, Vite 5, Tailwind CSS, Zustand |
 | Backend | Express.js, TypeScript, pg (node-postgres) |
-| Database | PostgreSQL 16 with pgcrypto extension |
+| Database | PostgreSQL 18 with pgcrypto extension |
 
 ### State Management
 - **courseStore** (`src/stores/courseStore.ts`): In-memory module/vocabulary data (mock)
@@ -184,7 +184,7 @@ docker compose up -d    # Start all services (frontend on :8082, backend on :300
 The Docker setup includes:
 - **Frontend**: Nginx serving static React build
 - **Backend**: Express.js API server
-- **Database**: PostgreSQL 16
+- **Database**: PostgreSQL 18
 - **Network**: Connects to external `aerospace-network` for main project integration
 
 ### Static Hosting

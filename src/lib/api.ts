@@ -29,7 +29,11 @@ interface ModuleApi {
   }>
 }
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) || 'http://localhost:3001'
+// 未显式配置 VITE_API_BASE_URL（或为空）时：
+// - 开发模式回退到本地后端 3001
+// - 生产构建回退为相对路径（同源部署：/aire/api 由 nginx 反代到后端，任何域名/端口入口通用）
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined)
+  || (import.meta.env.DEV ? 'http://localhost:3001' : `${import.meta.env.BASE_URL || '/'}api`)
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
