@@ -3,6 +3,7 @@ import Card from '../../components/common/Card'
 import Button from '../../components/common/Button'
 import WeatherQuiz from '../../components/practice/WeatherQuiz'
 import { useCourseStore } from '../../stores/courseStore'
+import { playAudio } from '../../lib/audio'
 
 export default function WeatherModule() {
   const [activeTab, setActiveTab] = useState<'vocab' | 'sentences' | 'quiz'>('vocab')
@@ -49,6 +50,26 @@ export default function WeatherModule() {
               <h3 className="text-xl font-bold text-aviation-blue">{vocab.word}</h3>
               <p className="text-lg text-gray-700">{vocab.translation}</p>
               <p className="text-sm text-gray-500 mt-1 italic">"{vocab.exampleSentence}"</p>
+              <div className="mt-3 flex gap-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    void playAudio(`${vocab.id}_word`, { fallbackText: vocab.word })
+                  }
+                >
+                  🔊 单词
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    void playAudio(`${vocab.id}_example`, { fallbackText: vocab.exampleSentence })
+                  }
+                >
+                  🔊 例句
+                </Button>
+              </div>
             </Card>
           ))}
         </div>
@@ -60,6 +81,29 @@ export default function WeatherModule() {
             <Card key={sentence.id} hover>
               <p className="text-xl font-medium text-aviation-blue">{sentence.english}</p>
               <p className="text-lg text-gray-600">{sentence.chinese}</p>
+              <div className="mt-3 flex gap-2">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    void playAudio(`${sentence.id}_en`, { fallbackText: sentence.english })
+                  }
+                >
+                  🔊 英文
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    void playAudio(`${sentence.id}_zh`, {
+                      fallbackText: sentence.chinese,
+                      fallbackLang: 'zh-CN',
+                    })
+                  }
+                >
+                  🔊 中文
+                </Button>
+              </div>
             </Card>
           ))}
         </div>

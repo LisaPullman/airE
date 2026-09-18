@@ -10,11 +10,11 @@ BEGIN;
 -- ============================================
 INSERT INTO modules (code, name, description, icon, vocab_count, sentence_count, display_order, is_active)
 VALUES
-('M1', '飞机认知', '学习飞机各部件的英文名称', '✈️', 6, 3, 1, TRUE),
-('M2', '机场流程', '掌握机场常用英语表达', '🏢', 5, 3, 2, TRUE),
-('M3', '塔台通信', '学习塔台标准通话用语', '📡', 4, 4, 3, TRUE),
-('M4', '航空天气', '了解天气对飞行的影响', '🌤️', 8, 6, 4, TRUE),
-('M5', '紧急情况', '学习紧急通话与应急处置英语', '🚨', 6, 4, 5, TRUE)
+('M1', '飞机认知', '学习飞机各部件的英文名称', '✈️', 7, 6, 1, TRUE),
+('M2', '机场流程', '掌握机场常用英语表达', '🏢', 6, 6, 2, TRUE),
+('M3', '塔台通信', '学习塔台标准通话用语', '📡', 6, 7, 3, TRUE),
+('M4', '航空天气', '了解天气对飞行的影响', '🌤️', 10, 8, 4, TRUE),
+('M5', '紧急情况', '学习紧急通话与应急处置英语', '🚨', 8, 7, 5, TRUE)
 ON CONFLICT (code) DO UPDATE SET
   name = EXCLUDED.name,
   description = EXCLUDED.description,
@@ -35,17 +35,21 @@ WITH vocab_seed AS (
     ('M1', 'engine', '发动机', 'The engine powers the aircraft.', 4),
     ('M1', 'fuselage', '机身', 'The fuselage is the body of the plane.', 5),
     ('M1', 'tail', '尾翼', 'The tail has the rudder.', 6),
+    ('M1', 'propeller', '螺旋桨', 'The propeller spins very fast.', 7),
 
     ('M2', 'terminal', '航站楼', 'The terminal is very big.', 1),
     ('M2', 'boarding pass', '登机牌', 'Show me your boarding pass.', 2),
     ('M2', 'security', '安检', 'Go through security please.', 3),
     ('M2', 'gate', '登机口', 'What gate is my flight?', 4),
     ('M2', 'luggage', '行李', 'Where can I pick up my luggage?', 5),
+    ('M2', 'passport', '护照', 'Show your passport at the counter.', 6),
 
     ('M3', 'takeoff', '起飞', 'We are ready for takeoff.', 1),
     ('M3', 'landing', '降落', 'We are requesting landing.', 2),
     ('M3', 'clearance', '许可', 'We have clearance to land.', 3),
-    ('M3', 'taxi', '滑行', 'Taxi to runway 24.', 4),
+    ('M3', 'taxi', '滑行', 'Taxi to runway two four.', 4),
+    ('M3', 'roger', '收到', 'Roger, turning right.', 5),
+    ('M3', 'altitude', '高度', 'Maintain altitude 5,000 feet.', 6),
 
     ('M4', 'visibility', '能见度', 'Low visibility on the runway.', 1),
     ('M4', 'turbulence', '颠簸', 'Expect turbulence at 10,000 feet.', 2),
@@ -55,13 +59,17 @@ WITH vocab_seed AS (
     ('M4', 'crosswind', '侧风', 'Crosswind on final approach.', 6),
     ('M4', 'headwind', '逆风', 'Headwind of 20 knots.', 7),
     ('M4', 'tailwind', '顺风', 'Tailwind component is 5 knots.', 8),
+    ('M4', 'fog', '大雾', 'There is heavy fog this morning.', 9),
+    ('M4', 'icing', '结冰', 'Watch out for icing on the wings.', 10),
 
     ('M5', 'MAYDAY', '遇险呼叫', 'MAYDAY, MAYDAY, MAYDAY.', 1),
     ('M5', 'PAN-PAN', '紧急呼叫', 'PAN-PAN, PAN-PAN, PAN-PAN.', 2),
     ('M5', 'engine failure', '发动机故障', 'We have an engine failure.', 3),
     ('M5', 'evacuate', '紧急撤离', 'Evacuate the aircraft immediately.', 4),
     ('M5', 'divert', '备降', 'We need to divert to an alternate airport.', 5),
-    ('M5', 'go around', '复飞', 'Unable to land, going around.', 6)
+    ('M5', 'go around', '复飞', 'Unable to land, going around.', 6),
+    ('M5', 'oxygen mask', '氧气面罩', 'Put on your oxygen mask first.', 7),
+    ('M5', 'life vest', '救生衣', 'Inflate your life vest after leaving the plane.', 8)
   ) AS t(module_code, word, translation, example_sentence, display_order)
 )
 INSERT INTO vocabularies (module_id, word, translation, example_sentence, display_order)
@@ -81,15 +89,24 @@ WITH sentence_seed AS (
     ('M1', 'Where is the gate?', '登机口在哪里？', 1),
     ('M1', 'How do I get to the terminal?', '我该怎么去航站楼？', 2),
     ('M1', 'I need to check in first.', '我需要先值机。', 3),
+    ('M1', 'Please fasten your seatbelt.', '请系好安全带。', 4),
+    ('M1', 'The plane is taking off now.', '飞机正在起飞。', 5),
+    ('M1', 'I want to be a pilot.', '我想成为一名飞行员。', 6),
 
     ('M2', 'Can I have a window seat?', '我可以要一个靠窗的座位吗？', 1),
     ('M2', 'Where is the security check?', '安检在哪里？', 2),
     ('M2', 'What time does the flight board?', '航班什么时候登机？', 3),
+    ('M2', 'Where is baggage claim?', '行李提取处在哪里？', 4),
+    ('M2', 'Here is my passport.', '这是我的护照。', 5),
+    ('M2', 'Where is the check-in counter?', '值机柜台在哪里？', 6),
 
     ('M3', 'Ready for takeoff.', '准备起飞。', 1),
     ('M3', 'Request landing clearance.', '请求降落许可。', 2),
     ('M3', 'Cleared to land.', '准许降落。', 3),
     ('M3', 'Taxi to runway.', '滑行至跑道。', 4),
+    ('M3', 'Maintain heading 090.', '保持航向090。', 5),
+    ('M3', 'Roger that, tower.', '收到，塔台。', 6),
+    ('M3', 'Climb and maintain 5,000 feet.', '上升到5000英尺并保持。', 7),
 
     ('M4', 'What is the visibility?', '能见度是多少？', 1),
     ('M4', 'Are there any thunderstorms on the route?', '航线上有雷暴吗？', 2),
@@ -97,11 +114,16 @@ WITH sentence_seed AS (
     ('M4', 'Wind is from the west at 15 knots.', '风向西，风速15节。', 4),
     ('M4', 'Ceiling is 800 feet with broken clouds.', '云幕高度800英尺，多云。', 5),
     ('M4', 'Runway visual range is 1000 meters.', '跑道视程1000米。', 6),
+    ('M4', 'Is the weather good for flying today?', '今天天气适合飞行吗？', 7),
+    ('M4', 'Fog is clearing on the runway.', '跑道上的雾正在消散。', 8),
 
     ('M5', 'MAYDAY, MAYDAY, MAYDAY, request immediate landing.', '遇险呼叫，请求立即降落。', 1),
     ('M5', 'PAN-PAN, low fuel, request priority landing.', '紧急呼叫，低油量，请求优先降落。', 2),
     ('M5', 'Emergency services standing by.', '应急救援已待命。', 3),
-    ('M5', 'Leave all luggage behind and evacuate immediately.', '请不要携带行李并立即撤离。', 4)
+    ('M5', 'Leave all luggage behind and evacuate immediately.', '请不要携带行李并立即撤离。', 4),
+    ('M5', 'Put on your oxygen mask.', '戴上你的氧气面罩。', 5),
+    ('M5', 'Remain calm and follow the crew.', '保持冷静，听从机组指挥。', 6),
+    ('M5', 'We are making an emergency landing.', '我们正在紧急降落。', 7)
   ) AS t(module_code, english, chinese, display_order)
 )
 INSERT INTO sentences (module_id, english, chinese, display_order)

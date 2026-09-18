@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Card from '../common/Card'
 import Button from '../common/Button'
 import type { Vocabulary } from '../../types'
-import { speak, stopSpeaking } from '../../lib/speech'
+import { playAudioSequence, stopAudio } from '../../lib/audio'
 
 interface VocabularyCardProps {
   vocabulary: Vocabulary
@@ -19,23 +19,23 @@ export default function VocabularyCard({ vocabulary, index }: VocabularyCardProp
     setIsPlaying(true)
 
     try {
-      // 先播放英文单词
-      await speak(vocabulary.word, 'en-US')
-      // 短暂暂停后播放例句
-      await new Promise(resolve => setTimeout(resolve, 300))
-      if (vocabulary.exampleSentence) {
-        await speak(vocabulary.exampleSentence, 'en-US', () => {
-          setIsPlaying(false)
-        })
-      }
+      // 先播放英文单词，短暂停顿后播放例句
+      const steps = [
+        { name: `${vocabulary.id}_word`, options: { fallbackText: vocabulary.word } },
+        ...(vocabulary.exampleSentence
+          ? [{ name: `${vocabulary.id}_example`, options: { fallbackText: vocabulary.exampleSentence } }]
+          : []),
+      ]
+      await playAudioSequence(steps)
     } catch (error) {
       setPlayError('语音播放失败，请检查浏览器设置')
+    } finally {
       setIsPlaying(false)
     }
   }
 
   const handleStop = () => {
-    stopSpeaking()
+    stopAudio()
     setIsPlaying(false)
   }
 

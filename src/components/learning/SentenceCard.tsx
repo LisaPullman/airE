@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Card from '../common/Card'
 import Button from '../common/Button'
 import type { Sentence } from '../../types'
-import { speak, stopSpeaking } from '../../lib/speech'
+import { playAudio, stopAudio } from '../../lib/audio'
 
 interface SentenceCardProps {
   sentence: Sentence
@@ -15,17 +15,16 @@ export default function SentenceCard({ sentence, index }: SentenceCardProps) {
   const [isRecording, setIsRecording] = useState(false)
   const [playError, setPlayError] = useState<string | null>(null)
 
-  const playAudio = async () => {
+  const playEnglish = async () => {
     setPlayError(null)
     setIsPlaying(true)
 
     try {
       // 播放英文句子
-      await speak(sentence.english, 'en-US', () => {
-        setIsPlaying(false)
-      })
+      await playAudio(`${sentence.id}_en`, { fallbackText: sentence.english })
     } catch (error) {
       setPlayError('语音播放失败，请检查浏览器设置')
+    } finally {
       setIsPlaying(false)
     }
   }
@@ -36,17 +35,16 @@ export default function SentenceCard({ sentence, index }: SentenceCardProps) {
 
     try {
       // 播放中文翻译
-      await speak(sentence.chinese, 'zh-CN', () => {
-        setIsPlaying(false)
-      })
+      await playAudio(`${sentence.id}_zh`, { fallbackText: sentence.chinese, fallbackLang: 'zh-CN' })
     } catch (error) {
       setPlayError('语音播放失败')
+    } finally {
       setIsPlaying(false)
     }
   }
 
   const handleStop = () => {
-    stopSpeaking()
+    stopAudio()
     setIsPlaying(false)
   }
 
@@ -70,7 +68,7 @@ export default function SentenceCard({ sentence, index }: SentenceCardProps) {
         <div className="flex-1">
           <div className="mb-2">
             <p className="text-xl font-medium text-aviation-blue cursor-pointer hover:text-aviation-light transition-colors"
-               onClick={playAudio}>
+               onClick={playEnglish}>
               {sentence.english}
             </p>
             <p className="text-lg text-gray-700">{sentence.chinese}</p>
@@ -104,7 +102,7 @@ export default function SentenceCard({ sentence, index }: SentenceCardProps) {
                 <Button
                   size="sm"
                   variant="secondary"
-                  onClick={playAudio}
+                  onClick={playEnglish}
                 >
                   🔊 英文
                 </Button>

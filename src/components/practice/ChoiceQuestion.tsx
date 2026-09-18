@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Card from '../common/Card'
 import Button from '../common/Button'
 import type { Question } from '../../types'
+import { speak } from '../../lib/speech'
 
 interface ChoiceQuestionProps {
   question: Question
@@ -11,29 +12,37 @@ interface ChoiceQuestionProps {
 export default function ChoiceQuestion({ question, onAnswer }: ChoiceQuestionProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
   const [showResult, setShowResult] = useState(false)
-  
+
   const handleSelect = (answer: string) => {
     if (showResult) return
     setSelectedAnswer(answer)
   }
-  
+
   const handleSubmit = () => {
     if (!selectedAnswer) return
     const isCorrect = selectedAnswer === question.correctAnswer
     setShowResult(true)
     onAnswer(isCorrect, selectedAnswer)
   }
-  
+
+  const playQuestion = () => {
+    if (question.audioUrl) {
+      const audio = new Audio(question.audioUrl)
+      void audio.play().catch(() => undefined)
+      return
+    }
+    // 题目来自后端题库，动态内容使用语音合成朗读
+    void speak(question.question, 'en-US').catch(() => undefined)
+  }
+
   return (
     <div className="space-y-6">
       {/* 问题 */}
       <div className="text-center">
         <h3 className="text-xl font-bold text-gray-800">{question.question}</h3>
-        {question.audioUrl && (
-          <Button size="sm" variant="secondary" className="mt-2">
-            🔊 播放音频
-          </Button>
-        )}
+        <Button size="sm" variant="secondary" className="mt-2" onClick={playQuestion}>
+          🔊 {question.audioUrl ? '播放音频' : '读题'}
+        </Button>
       </div>
       
       {/* 选项 */}
