@@ -1,11 +1,15 @@
 import { create } from 'zustand'
 import type { Module } from '../types'
+import { fetchFullModules } from '../lib/api'
 
 interface CourseState {
   modules: Module[]
   currentModule: Module | null
+  /** 是否已成功从后端加载课程数据(失败时静默使用下方内置数据) */
+  loadedFromServer: boolean
   setModules: (modules: Module[]) => void
   setCurrentModule: (module: Module | null) => void
+  loadFromServer: () => Promise<void>
   getModuleById: (id: string) => Module | undefined
   getFullModule: (id: string) => Module | undefined
 }
@@ -141,8 +145,21 @@ const mockModules: Module[] = [
 export const useCourseStore = create<CourseState>()((set, get) => ({
   modules: mockModules,
   currentModule: null,
+  loadedFromServer: false,
   setModules: (modules) => set({ modules }),
   setCurrentModule: (module) => set({ currentModule: module }),
+  loadFromServer: async () => {
+    if (get().loadedFromServer) return
+    try {
+      // 后端可用时以数据库为准;不可用时保持内置数据(纯静态部署仍可学习)
+      const modules = await fetchFullModules()
+      if (modules.length > 0) {
+        set({ modules, loadedFromServer: true })
+      }
+    } catch {
+      // 静默失败,继续使用内置数据
+    }
+  },
   getModuleById: (id) => get().modules.find((m) => m.id === id),
   getFullModule: (id) => get().modules.find((m) => m.id === id),
 }))

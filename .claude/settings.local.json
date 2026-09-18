@@ -32,7 +32,21 @@
       "Bash(npm install)",
       "Bash(lsof -ti:3001 | xargs kill -9 2>/dev/null || true)",
       "Bash(sleep 3 && curl -s http://localhost:3001/health && echo \" - 后端健康\" || echo \"后端未就绪\")",
-      "Bash(sleep 3 && curl -s http://localhost:5173 > /dev/null && echo \"前端运行中 \\(端口 5173\\)\" || echo \"前端未就绪\")"
+      "Bash(sleep 3 && curl -s http://localhost:5173 > /dev/null && echo \"前端运行中 \\(端口 5173\\)\" || echo \"前端未就绪\")",
+      "Bash(/usr/bin/python3 -m tts_skill --ping)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/bin/**)",
+      "Read(//Users/foxai/miniconda3/**)",
+      "Read(//Users/foxai/.local/bin/**)",
+      "Read(//Library/Frameworks/**)",
+      "Read(//Applications/**)",
+      "Bash(/usr/bin/python3 *)",
+      "Bash(ls *)",
+      "Bash(/Library/Developer/CommandLineTools/usr/bin/python3 -m tts_skill --ping)",
+      "Bash(/Library/Developer/CommandLineTools/usr/bin/python3 -c ' *)",
+      "Bash(/Library/Developer/CommandLineTools/usr/bin/python3 gen_aire_audio.py)",
+      "Bash(npm run *)",
+      "Bash(echo \"exit: $?\")"
     ]
   }
 }

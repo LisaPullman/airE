@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx",
-    "test": "vitest",
+    "test": "vitest run",
     "db:up": "docker compose -f sql/docker-compose.yml up -d",
     "db:down": "docker compose -f sql/docker-compose.yml down",
     "db:logs": "docker compose -f sql/docker-compose.yml logs -f postgres",
@@ -17,11 +17,6 @@
     "db:reset": "npm run db:init && npm run db:seed"
   },
   "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "dotenv": "^16.4.5",
-    "howler": "^2.2.4",
-    "jsonwebtoken": "^9.0.2",
-    "pg": "^8.13.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.30.3",
@@ -39,6 +34,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.26",
     "postcss": "^8.4.49",

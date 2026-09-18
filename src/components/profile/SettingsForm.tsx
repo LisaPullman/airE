@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { User } from '../../types'
 import Button from '../common/Button'
 
@@ -30,12 +30,21 @@ export default function SettingsForm({ user, onSave }: SettingsFormProps) {
   })
   const [isEditing, setIsEditing] = useState(false)
   const [saved, setSaved] = useState(false)
+  const savedTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // 卸载或再次保存时清理旧的 setTimeout，避免对已卸载组件 setState
+  useEffect(() => {
+    return () => {
+      if (savedTimerRef.current) clearTimeout(savedTimerRef.current)
+    }
+  }, [])
 
   const handleSave = () => {
     onSave(settings)
     setIsEditing(false)
     setSaved(true)
-    setTimeout(() => setSaved(false), 2000)
+    if (savedTimerRef.current) clearTimeout(savedTimerRef.current)
+    savedTimerRef.current = setTimeout(() => setSaved(false), 2000)
   }
 
   return (

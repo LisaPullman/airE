@@ -3,11 +3,18 @@
 //   - 页面导航: 网络优先,离线时回退缓存(保证发版后能拿到新页面)
 //   - 静态资源/音频: stale-while-revalidate(先用缓存,后台更新)
 //   - API 请求: 不缓存,始终走网络
+//
+// 部署到子路径（如 /aire/）时，scope 与基础 URL 必须匹配，否则 SW 不会激活。
 const CACHE_NAME = 'takeoff-aviation-v2';
+
+// 从 sw.js 的位置推断基础路径，使 SW 在任意 base path 下都能找到根 index.html
+const SW_SCOPE = self.location.pathname.replace(/\/sw\.js$/, '');
+const ROOT_PATH = SW_SCOPE === '' || SW_SCOPE === '/' ? '/' : SW_SCOPE + '/';
+
 const STATIC_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json'
+  ROOT_PATH,
+  ROOT_PATH + 'index.html',
+  ROOT_PATH + 'manifest.json'
 ];
 
 // 安装 Service Worker
@@ -62,7 +69,7 @@ self.addEventListener('fetch', (event) => {
           return response;
         })
         .catch(() =>
-          caches.match(request).then((cached) => cached || caches.match('/'))
+          caches.match(request).then((cached) => cached || caches.match(ROOT_PATH))
         )
     );
     return;

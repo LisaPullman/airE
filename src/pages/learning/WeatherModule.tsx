@@ -49,7 +49,7 @@ export default function WeatherModule() {
             <Card key={vocab.id} hover>
               <h3 className="text-xl font-bold text-aviation-blue">{vocab.word}</h3>
               <p className="text-lg text-gray-700">{vocab.translation}</p>
-              <p className="text-sm text-gray-500 mt-1 italic">"{vocab.exampleSentence}"</p>
+              <p className="text-sm text-gray-500 mt-1 italic">&ldquo;{vocab.exampleSentence}&rdquo;</p>
               <div className="mt-3 flex gap-2">
                 <Button
                   size="sm"

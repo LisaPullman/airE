@@ -55,7 +55,7 @@ export default function VocabularyCard({ vocabulary, index }: VocabularyCardProp
         <div className="absolute inset-0 backface-hidden rotate-y-180">
           <Card className="h-full flex flex-col items-center justify-center bg-gradient-to-br from-green-50 to-emerald-50">
             <h3 className="text-2xl font-bold text-gray-800 mb-2">{vocabulary.translation}</h3>
-            <p className="text-sm text-gray-600 italic text-center px-4">"{vocabulary.exampleSentence}"</p>
+            <p className="text-sm text-gray-600 italic text-center px-4">&ldquo;{vocabulary.exampleSentence}&rdquo;</p>
           </Card>
         </div>
       </div>

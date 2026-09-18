@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Button from '../components/common/Button'
 import { ModuleCard } from '../components/common/Card'
@@ -32,6 +33,16 @@ export default function HomePage() {
   const { modules } = useCourseStore()
   const { user } = useUserStore()
   const navigate = useNavigate()
+
+  // 使用基于模块 id 的稳定伪随机进度（每次刷新保持一致），
+  // 直到后端接入真实学习进度统计接口。
+  const moduleProgressMap = useMemo(() => {
+    const map: Record<string, number> = {}
+    modules.forEach((module, index) => {
+      map[module.id] = (index * 17 + 23) % 100
+    })
+    return map
+  }, [modules])
 
   return (
     <div className="relative min-h-screen">
@@ -147,7 +158,7 @@ export default function HomePage() {
                 icon={moduleIconMap[module.id] || <BookIcon className="w-12 h-12" />}
                 title={module.name}
                 description={module.description}
-                progress={Math.floor(Math.random() * 100)}
+                progress={moduleProgressMap[module.id] ?? 0}
                 color={moduleColors[index % moduleColors.length]}
                 onClick={() => navigate(`/modules/${module.id}`)}
               />

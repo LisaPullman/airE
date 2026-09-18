@@ -81,6 +81,7 @@ Base URL: `VITE_API_BASE_URL` env var (default: `http://localhost:3001`)
 | GET | `/health` | Service health check |
 | GET | `/health/db` | Database connectivity |
 | GET | `/api/modules` | List all modules |
+| GET | `/api/modules/full` | All modules with vocabularies/sentences (frontend bootstraps course data from this) |
 | GET | `/api/modules/:moduleId` | Get module with vocabularies/sentences |
 | GET | `/api/users/:userId` | Get user by ID |
 | GET | `/api/goals/:userId` | Get user goals |
@@ -104,6 +105,18 @@ Base URL: `VITE_API_BASE_URL` env var (default: `http://localhost:3001`)
 | `learning_history` | Learning activity log |
 
 All tables have `created_at TIMESTAMPTZ`. Users table has auto-updating `updated_at` via trigger.
+
+`vocabularies.code` / `sentences.code` are stable short IDs (V1, S10, VW9...) shared with the frontend mock data — audio files are named after them (`{code}_word.mp3`, `{code}_example.mp3`, `{code}_en.mp3`, `{code}_zh.mp3`). Keep them in sync when editing content.
+
+## Course Data & Audio Pipeline
+
+- **Data flow**: on startup the frontend tries `GET /api/modules/full` and replaces its built-in course data (DB is source of truth); if the backend is unreachable it silently falls back to the embedded modules in `src/stores/courseStore.ts` (static deploys still work).
+- **Adding vocabulary/sentences**: edit `src/stores/courseStore.ts` (only ADD new IDs — never renumber, audio is keyed by ID), mirror the change in `sql/seed.sql`, then regenerate audio:
+  ```bash
+  cd "TTS skill" && /Library/Developer/CommandLineTools/usr/bin/python3 gen_aire_audio.py
+  ```
+  (uses `/Library/Developer/CommandLineTools/usr/bin/python3` because `/usr/bin/python3` is blocked by the Xcode license on this machine; script is idempotent — only missing files are generated)
+- **Audio playback**: `src/lib/audio.ts` plays pre-generated mp3 from `public/audio/` first, falling back to Web Speech API (`src/lib/speech.ts`) when a file is missing.
 
 ## Environment Variables
 

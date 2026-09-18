@@ -1,83 +1,63 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Card from '../common/Card'
 import Button from '../common/Button'
 import ProgressBar from '../common/ProgressBar'
+import { fetchQuizQuestions, type QuizQuestionApi } from '../../lib/api'
 
-interface QuizQuestion {
-  id: string
-  question: string
-  options: string[]
-  correctAnswer: string
-  explanation: string
-}
-
-const weatherQuestions: QuizQuestion[] = [
-  {
-    id: 'WQ1',
-    question: 'What does "visibility" mean in aviation?',
-    options: ['能见度', '高度', '速度', '温度'],
-    correctAnswer: '能见度',
-    explanation: 'Visibility refers to how far you can see, important for safe landing.'
-  },
-  {
-    id: 'WQ2',
-    question: 'What should pilots avoid during thunderstorms?',
-    options: ['Cloud flying', 'Direct flight path', 'Turbulence zones', 'Night flying'],
-    correctAnswer: 'Turbulence zones',
-    explanation: 'Thunderstorms create dangerous turbulence that can damage aircraft.'
-  },
-  {
-    id: 'WQ3',
-    question: '"Ceiling" in aviation weather refers to:',
-    options: ['Cloud height', 'Building height', 'Mountain height', 'Runway length'],
-    correctAnswer: 'Cloud height',
-    explanation: 'Ceiling is the height of the lowest cloud layer.'
-  },
-  {
-    id: 'WQ4',
-    question: 'What is "crosswind"?',
-    options: ['Wind from behind', 'Wind from side', 'Wind from front', 'No wind'],
-    correctAnswer: 'Wind from side',
-    explanation: 'Crosswind makes landing more challenging for pilots.'
-  },
-  {
-    id: 'WQ5',
-    question: 'If you hear "expect turbulence", you should:',
-    options: ['Turn off seatbelt sign', 'Fasten your seatbelt', 'Open cabin door', 'Stand up'],
-    correctAnswer: 'Fasten your seatbelt',
-    explanation: 'Always buckle up when turbulence is expected!'
-  }
-]
+const QUIZ_COUNT = 5
 
 export default function WeatherQuiz() {
+  const [questions, setQuestions] = useState<QuizQuestionApi[]>([])
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
   const [showResult, setShowResult] = useState(false)
-  const [score, setScore] = useState(0)
+  const [correctCount, setCorrectCount] = useState(0)
   const [completed, setCompleted] = useState(false)
-  
-  const question = weatherQuestions[currentQuestion]
-  const progress = ((currentQuestion) / weatherQuestions.length) * 100
-  
-  const handleAnswer = (answer: string) => {
-    setSelectedAnswer(answer)
-    setShowResult(true)
-    
-    if (answer === question.correctAnswer) {
-      setScore(score + 20)
-    }
-  }
-  
-  const handleNext = () => {
-    if (currentQuestion < weatherQuestions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1)
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+
+  const loadQuestions = useCallback(async () => {
+    setLoading(true)
+    setLoadError(null)
+    try {
+      const data = await fetchQuizQuestions('M4', QUIZ_COUNT)
+      setQuestions(data)
+      setCurrentQuestion(0)
       setSelectedAnswer(null)
       setShowResult(false)
-    } else {
-      setCompleted(true)
+      setCorrectCount(0)
+      setCompleted(false)
+    } catch (error) {
+      console.error('加载天气题库失败', error)
+      setQuestions([])
+      setLoadError('题库加载失败，请确认后端服务和数据库已启动。')
+    } finally {
+      setLoading(false)
     }
+  }, [])
+
+  useEffect(() => {
+    void loadQuestions()
+  }, [loadQuestions])
+
+  if (loading) {
+    return <div className="text-center py-10 text-gray-500">题库加载中...</div>
   }
-  
+
+  if (loadError) {
+    return (
+      <div className="text-center py-10 space-y-4">
+        <p className="text-red-600 font-bold">{loadError}</p>
+        <Button variant="primary" onClick={() => void loadQuestions()}>
+          重试加载
+        </Button>
+      </div>
+    )
+  }
+
+  const total = questions.length
+  const score = total > 0 ? Math.round((correctCount / total) * 100) : 0
+
   if (completed) {
     return (
       <div className="text-center py-10">
@@ -89,46 +69,62 @@ export default function WeatherQuiz() {
           <ProgressBar value={score} max={100} color={score >= 80 ? 'green' : score >= 60 ? 'yellow' : 'red'} />
         </Card>
         <div className="text-xl text-gray-700 mb-6">
-          {score >= 80 ? '太棒了！你已经掌握航空天气知识！' : 
+          {score >= 80 ? '太棒了！你已经掌握航空天气知识！' :
            score >= 60 ? '不错！继续努力会更好！' : '继续练习，你会进步很快！'}
         </div>
-        <Button size="lg" variant="primary" onClick={() => {
-          setCurrentQuestion(0)
-          setSelectedAnswer(null)
-          setShowResult(false)
-          setScore(0)
-          setCompleted(false)
-        }}>
+        <Button size="lg" variant="primary" onClick={() => void loadQuestions()}>
           🔄 再测一次
         </Button>
       </div>
     )
   }
-  
+
+  const question = questions[currentQuestion]
+  const progress = (currentQuestion / total) * 100
+
+  const handleAnswer = (answer: string) => {
+    setSelectedAnswer(answer)
+    setShowResult(true)
+
+    if (answer === question.correct_answer) {
+      setCorrectCount((prev) => prev + 1)
+    }
+  }
+
+  const handleNext = () => {
+    if (currentQuestion < total - 1) {
+      setCurrentQuestion(currentQuestion + 1)
+      setSelectedAnswer(null)
+      setShowResult(false)
+    } else {
+      setCompleted(true)
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* 进度条 */}
       <div className="flex items-center gap-4">
         <span className="text-sm text-gray-600">
-          {currentQuestion + 1} / {weatherQuestions.length}
+          {currentQuestion + 1} / {total}
         </span>
         <ProgressBar value={progress} max={100} size="sm" />
       </div>
-      
+
       {/* 问题卡片 */}
       <Card>
-        <h3 className="text-xl font-bold text-gray-800 mb-6">{question.question}</h3>
-        
+        <h3 className="text-xl font-bold text-gray-800 mb-6">{question.question_text}</h3>
+
         <div className="space-y-3">
-          {question.options.map((option, index) => (
+          {question.options.map((option) => (
             <button
-              key={index}
+              key={option}
               onClick={() => !showResult && handleAnswer(option)}
               disabled={showResult}
               className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                showResult && option === question.correctAnswer
+                showResult && option === question.correct_answer
                   ? 'border-success-green bg-green-50'
-                  : showResult && option === selectedAnswer && option !== question.correctAnswer
+                  : showResult && option === selectedAnswer && option !== question.correct_answer
                   ? 'border-danger-red bg-red-50'
                   : 'border-gray-200 hover:border-aviation-light hover:bg-blue-50'
               } ${showResult ? 'cursor-default' : 'cursor-pointer'}`}
@@ -137,20 +133,20 @@ export default function WeatherQuiz() {
             </button>
           ))}
         </div>
-        
+
         {/* 结果显示 */}
         {showResult && (
           <div className={`mt-6 p-4 rounded-lg ${
-            selectedAnswer === question.correctAnswer ? 'bg-green-100' : 'bg-red-100'
+            selectedAnswer === question.correct_answer ? 'bg-green-100' : 'bg-red-100'
           }`}>
             <p className="font-bold mb-2">
-              {selectedAnswer === question.correctAnswer ? '✅ 正确！' : '❌ 再想想'}
+              {selectedAnswer === question.correct_answer ? '✅ 正确！' : '❌ 再想想'}
             </p>
             <p className="text-sm text-gray-700">{question.explanation}</p>
-            
+
             <div className="mt-4">
               <Button onClick={handleNext} variant="primary">
-                {currentQuestion < weatherQuestions.length - 1 ? '下一题 ➡️' : '查看结果 📊'}
+                {currentQuestion < total - 1 ? '下一题 ➡️' : '查看结果 📊'}
               </Button>
             </div>
           </div>

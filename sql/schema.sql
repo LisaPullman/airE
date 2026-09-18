@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS modules (
 CREATE TABLE IF NOT EXISTS vocabularies (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     module_id UUID NOT NULL REFERENCES modules(id) ON DELETE CASCADE,
+    code VARCHAR(20),
     word VARCHAR(100) NOT NULL,
     translation VARCHAR(100) NOT NULL,
     image_url VARCHAR(255),
@@ -63,6 +64,7 @@ CREATE TABLE IF NOT EXISTS vocabularies (
 CREATE TABLE IF NOT EXISTS sentences (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     module_id UUID NOT NULL REFERENCES modules(id) ON DELETE CASCADE,
+    code VARCHAR(20),
     english VARCHAR(255) NOT NULL,
     chinese VARCHAR(255) NOT NULL,
     audio_url VARCHAR(255),
@@ -70,6 +72,10 @@ CREATE TABLE IF NOT EXISTS sentences (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT uq_sentence_module_english UNIQUE (module_id, english)
 );
+
+-- 幂等迁移: 为已存在的库补充 code 列(与前端 courseStore 的 ID 对应,用于音频文件命名)
+ALTER TABLE vocabularies ADD COLUMN IF NOT EXISTS code VARCHAR(20);
+ALTER TABLE sentences ADD COLUMN IF NOT EXISTS code VARCHAR(20);
 
 -- ============================================
 -- 5. 学习目标表
@@ -137,7 +143,9 @@ CREATE TABLE IF NOT EXISTS learning_history (
     module_id UUID REFERENCES modules(id) ON DELETE SET NULL,
     action_type VARCHAR(50) NOT NULL,
     action_detail JSONB,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT chk_learning_history_action_type
+      CHECK (action_type IN ('module_complete', 'view_vocab', 'view_sentence', 'quiz_answer', 'goal_create', 'goal_complete'))
 );
 
 -- ============================================
@@ -148,6 +156,8 @@ CREATE INDEX IF NOT EXISTS idx_modules_active_order ON modules(is_active, displa
 
 CREATE INDEX IF NOT EXISTS idx_vocabularies_module_order ON vocabularies(module_id, display_order);
 CREATE INDEX IF NOT EXISTS idx_sentences_module_order ON sentences(module_id, display_order);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_vocabularies_code ON vocabularies(code) WHERE code IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_sentences_code ON sentences(code) WHERE code IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_questions_module_active ON questions(module_id, is_active, display_order);
 CREATE INDEX IF NOT EXISTS idx_questions_source_tag ON questions(source_tag);
 

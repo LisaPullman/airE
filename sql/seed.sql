@@ -12,7 +12,7 @@ INSERT INTO modules (code, name, description, icon, vocab_count, sentence_count,
 VALUES
 ('M1', '飞机认知', '学习飞机各部件的英文名称', '✈️', 7, 6, 1, TRUE),
 ('M2', '机场流程', '掌握机场常用英语表达', '🏢', 6, 6, 2, TRUE),
-('M3', '塔台通信', '学习塔台标准通话用语', '📡', 6, 7, 3, TRUE),
+('M3', '塔台通信', '学习塔台标准通话用语', '📡', 6, 6, 3, TRUE),
 ('M4', '航空天气', '了解天气对飞行的影响', '🌤️', 10, 8, 4, TRUE),
 ('M5', '紧急情况', '学习紧急通话与应急处置英语', '🚨', 8, 7, 5, TRUE)
 ON CONFLICT (code) DO UPDATE SET
@@ -29,54 +29,55 @@ ON CONFLICT (code) DO UPDATE SET
 -- ============================================
 WITH vocab_seed AS (
   SELECT * FROM (VALUES
-    ('M1', 'wing', '机翼', 'The wing helps the plane fly.', 1),
-    ('M1', 'cockpit', '驾驶舱', 'The pilot sits in the cockpit.', 2),
-    ('M1', 'runway', '跑道', 'The plane is on the runway.', 3),
-    ('M1', 'engine', '发动机', 'The engine powers the aircraft.', 4),
-    ('M1', 'fuselage', '机身', 'The fuselage is the body of the plane.', 5),
-    ('M1', 'tail', '尾翼', 'The tail has the rudder.', 6),
-    ('M1', 'propeller', '螺旋桨', 'The propeller spins very fast.', 7),
+    ('M1', 'V1', 'wing', '机翼', 'The wing helps the plane fly.', 1),
+    ('M1', 'V2', 'cockpit', '驾驶舱', 'The pilot sits in the cockpit.', 2),
+    ('M1', 'V3', 'runway', '跑道', 'The plane is on the runway.', 3),
+    ('M1', 'V4', 'engine', '发动机', 'The engine powers the aircraft.', 4),
+    ('M1', 'V11', 'propeller', '螺旋桨', 'The propeller spins very fast.', 5),
+    ('M1', 'V12', 'fuselage', '机身', 'The fuselage is the body of the plane.', 6),
+    ('M1', 'V13', 'tail', '尾翼', 'The tail has the rudder.', 7),
 
-    ('M2', 'terminal', '航站楼', 'The terminal is very big.', 1),
-    ('M2', 'boarding pass', '登机牌', 'Show me your boarding pass.', 2),
-    ('M2', 'security', '安检', 'Go through security please.', 3),
-    ('M2', 'gate', '登机口', 'What gate is my flight?', 4),
-    ('M2', 'luggage', '行李', 'Where can I pick up my luggage?', 5),
-    ('M2', 'passport', '护照', 'Show your passport at the counter.', 6),
+    ('M2', 'V5', 'terminal', '航站楼', 'The terminal is very busy.', 1),
+    ('M2', 'V6', 'boarding pass', '登机牌', 'Please show your boarding pass.', 2),
+    ('M2', 'V7', 'security', '安检', 'Go through security please.', 3),
+    ('M2', 'V14', 'passport', '护照', 'Show your passport at the counter.', 4),
+    ('M2', 'V15', 'gate', '登机口', 'What gate is my flight?', 5),
+    ('M2', 'V16', 'luggage', '行李', 'Where can I pick up my luggage?', 6),
 
-    ('M3', 'takeoff', '起飞', 'We are ready for takeoff.', 1),
-    ('M3', 'landing', '降落', 'We are requesting landing.', 2),
-    ('M3', 'clearance', '许可', 'We have clearance to land.', 3),
-    ('M3', 'taxi', '滑行', 'Taxi to runway two four.', 4),
-    ('M3', 'roger', '收到', 'Roger, turning right.', 5),
-    ('M3', 'altitude', '高度', 'Maintain altitude 5,000 feet.', 6),
+    ('M3', 'V8', 'takeoff', '起飞', 'Ready for takeoff.', 1),
+    ('M3', 'V9', 'landing', '降落', 'Request landing clearance.', 2),
+    ('M3', 'V10', 'clearance', '许可', 'Clearance granted.', 3),
+    ('M3', 'V17', 'roger', '收到', 'Roger, turning right.', 4),
+    ('M3', 'V18', 'altitude', '高度', 'Maintain altitude 5,000 feet.', 5),
+    ('M3', 'V19', 'taxi', '滑行', 'Taxi to runway two four.', 6),
 
-    ('M4', 'visibility', '能见度', 'Low visibility on the runway.', 1),
-    ('M4', 'turbulence', '颠簸', 'Expect turbulence at 10,000 feet.', 2),
-    ('M4', 'thunderstorm', '雷暴', 'Thunderstorms in the area.', 3),
-    ('M4', 'wind shear', '风切变', 'Wind shear warning at runway.', 4),
-    ('M4', 'ceiling', '云幕高度', 'Ceiling is 500 feet.', 5),
-    ('M4', 'crosswind', '侧风', 'Crosswind on final approach.', 6),
-    ('M4', 'headwind', '逆风', 'Headwind of 20 knots.', 7),
-    ('M4', 'tailwind', '顺风', 'Tailwind component is 5 knots.', 8),
-    ('M4', 'fog', '大雾', 'There is heavy fog this morning.', 9),
-    ('M4', 'icing', '结冰', 'Watch out for icing on the wings.', 10),
+    ('M4', 'VW1', 'visibility', '能见度', 'Low visibility on the runway.', 1),
+    ('M4', 'VW2', 'turbulence', '颠簸', 'Expect turbulence at 10,000 feet.', 2),
+    ('M4', 'VW3', 'thunderstorm', '雷暴', 'Thunderstorms in the area.', 3),
+    ('M4', 'VW4', 'wind shear', '风切变', 'Wind shear warning at runway.', 4),
+    ('M4', 'VW5', 'ceiling', '云幕高度', 'Ceiling is 500 feet.', 5),
+    ('M4', 'VW6', 'crosswind', '侧风', 'Crosswind on final approach.', 6),
+    ('M4', 'VW7', 'headwind', '逆风', 'Headwind of 20 knots.', 7),
+    ('M4', 'VW8', 'tailwind', '顺风', 'Tailwind component is 5 knots.', 8),
+    ('M4', 'VW9', 'fog', '大雾', 'There is heavy fog this morning.', 9),
+    ('M4', 'VW10', 'icing', '结冰', 'Watch out for icing on the wings.', 10),
 
-    ('M5', 'MAYDAY', '遇险呼叫', 'MAYDAY, MAYDAY, MAYDAY.', 1),
-    ('M5', 'PAN-PAN', '紧急呼叫', 'PAN-PAN, PAN-PAN, PAN-PAN.', 2),
-    ('M5', 'engine failure', '发动机故障', 'We have an engine failure.', 3),
-    ('M5', 'evacuate', '紧急撤离', 'Evacuate the aircraft immediately.', 4),
-    ('M5', 'divert', '备降', 'We need to divert to an alternate airport.', 5),
-    ('M5', 'go around', '复飞', 'Unable to land, going around.', 6),
-    ('M5', 'oxygen mask', '氧气面罩', 'Put on your oxygen mask first.', 7),
-    ('M5', 'life vest', '救生衣', 'Inflate your life vest after leaving the plane.', 8)
-  ) AS t(module_code, word, translation, example_sentence, display_order)
+    ('M5', 'VE1', 'MAYDAY', '遇险呼叫', 'MAYDAY, MAYDAY, MAYDAY.', 1),
+    ('M5', 'VE2', 'PAN-PAN', '紧急呼叫', 'PAN-PAN, low fuel, request priority.', 2),
+    ('M5', 'VE3', 'engine failure', '发动机故障', 'We have an engine failure.', 3),
+    ('M5', 'VE4', 'evacuate', '紧急撤离', 'Evacuate the aircraft immediately.', 4),
+    ('M5', 'VE5', 'divert', '备降', 'We need to divert to an alternate airport.', 5),
+    ('M5', 'VE6', 'go around', '复飞', 'Unable to land, going around.', 6),
+    ('M5', 'VE7', 'oxygen mask', '氧气面罩', 'Put on your oxygen mask first.', 7),
+    ('M5', 'VE8', 'life vest', '救生衣', 'Inflate your life vest after leaving the plane.', 8)
+  ) AS t(module_code, code, word, translation, example_sentence, display_order)
 )
-INSERT INTO vocabularies (module_id, word, translation, example_sentence, display_order)
-SELECT m.id, v.word, v.translation, v.example_sentence, v.display_order
+INSERT INTO vocabularies (module_id, code, word, translation, example_sentence, display_order)
+SELECT m.id, v.code, v.word, v.translation, v.example_sentence, v.display_order
 FROM vocab_seed v
 JOIN modules m ON m.code = v.module_code
 ON CONFLICT (module_id, word) DO UPDATE SET
+  code = EXCLUDED.code,
   translation = EXCLUDED.translation,
   example_sentence = EXCLUDED.example_sentence,
   display_order = EXCLUDED.display_order;
@@ -86,51 +87,51 @@ ON CONFLICT (module_id, word) DO UPDATE SET
 -- ============================================
 WITH sentence_seed AS (
   SELECT * FROM (VALUES
-    ('M1', 'Where is the gate?', '登机口在哪里？', 1),
-    ('M1', 'How do I get to the terminal?', '我该怎么去航站楼？', 2),
-    ('M1', 'I need to check in first.', '我需要先值机。', 3),
-    ('M1', 'Please fasten your seatbelt.', '请系好安全带。', 4),
-    ('M1', 'The plane is taking off now.', '飞机正在起飞。', 5),
-    ('M1', 'I want to be a pilot.', '我想成为一名飞行员。', 6),
+    ('M1', 'S1', 'Where is the gate?', '登机口在哪里？', 1),
+    ('M1', 'S2', 'How do I get to the terminal?', '我该怎么去航站楼？', 2),
+    ('M1', 'S3', 'Please fasten your seatbelt.', '请系好安全带。', 3),
+    ('M1', 'S10', 'I need to check in first.', '我需要先值机。', 4),
+    ('M1', 'S11', 'The plane is taking off now.', '飞机正在起飞。', 5),
+    ('M1', 'S12', 'I want to be a pilot.', '我想成为一名飞行员。', 6),
 
-    ('M2', 'Can I have a window seat?', '我可以要一个靠窗的座位吗？', 1),
-    ('M2', 'Where is the security check?', '安检在哪里？', 2),
-    ('M2', 'What time does the flight board?', '航班什么时候登机？', 3),
-    ('M2', 'Where is baggage claim?', '行李提取处在哪里？', 4),
-    ('M2', 'Here is my passport.', '这是我的护照。', 5),
-    ('M2', 'Where is the check-in counter?', '值机柜台在哪里？', 6),
+    ('M2', 'S4', 'Can I have a window seat?', '我可以要一个靠窗的座位吗？', 1),
+    ('M2', 'S13', 'Where is the security check?', '安检在哪里？', 2),
+    ('M2', 'S5', 'What time does boarding start?', '什么时候开始登机？', 3),
+    ('M2', 'S6', 'Where is baggage claim?', '行李提取处在哪里？', 4),
+    ('M2', 'S14', 'Here is my passport.', '这是我的护照。', 5),
+    ('M2', 'S15', 'Where is the check-in counter?', '值机柜台在哪里？', 6),
 
-    ('M3', 'Ready for takeoff.', '准备起飞。', 1),
-    ('M3', 'Request landing clearance.', '请求降落许可。', 2),
-    ('M3', 'Cleared to land.', '准许降落。', 3),
-    ('M3', 'Taxi to runway.', '滑行至跑道。', 4),
-    ('M3', 'Maintain heading 090.', '保持航向090。', 5),
-    ('M3', 'Roger that, tower.', '收到，塔台。', 6),
-    ('M3', 'Climb and maintain 5,000 feet.', '上升到5000英尺并保持。', 7),
+    ('M3', 'S7', 'Ready for takeoff.', '准备起飞。', 1),
+    ('M3', 'S8', 'Request landing clearance.', '请求降落许可。', 2),
+    ('M3', 'S9', 'Maintain heading 090.', '保持航向090。', 3),
+    ('M3', 'S16', 'Cleared to land.', '准许降落。', 4),
+    ('M3', 'S17', 'Roger that, tower.', '收到，塔台。', 5),
+    ('M3', 'S18', 'Climb and maintain 5,000 feet.', '上升到5000英尺并保持。', 6),
 
-    ('M4', 'What is the visibility?', '能见度是多少？', 1),
-    ('M4', 'Are there any thunderstorms on the route?', '航线上有雷暴吗？', 2),
-    ('M4', 'Expect turbulence during descent.', '下降过程中预计有颠簸。', 3),
-    ('M4', 'Wind is from the west at 15 knots.', '风向西，风速15节。', 4),
-    ('M4', 'Ceiling is 800 feet with broken clouds.', '云幕高度800英尺，多云。', 5),
-    ('M4', 'Runway visual range is 1000 meters.', '跑道视程1000米。', 6),
-    ('M4', 'Is the weather good for flying today?', '今天天气适合飞行吗？', 7),
-    ('M4', 'Fog is clearing on the runway.', '跑道上的雾正在消散。', 8),
+    ('M4', 'SW1', 'What is the visibility?', '能见度是多少？', 1),
+    ('M4', 'SW2', 'Are there thunderstorms on the route?', '航线上有雷暴吗？', 2),
+    ('M4', 'SW3', 'Expect turbulence during descent.', '下降过程中预计有颠簸。', 3),
+    ('M4', 'SW4', 'Wind is from the west at 15 knots.', '风向西，风速15节。', 4),
+    ('M4', 'SW5', 'Ceiling is 800 feet.', '云幕高度800英尺。', 5),
+    ('M4', 'SW6', 'Runway visual range is 1000 meters.', '跑道视程1000米。', 6),
+    ('M4', 'SW7', 'Is the weather good for flying today?', '今天天气适合飞行吗？', 7),
+    ('M4', 'SW8', 'Fog is clearing on the runway.', '跑道上的雾正在消散。', 8),
 
-    ('M5', 'MAYDAY, MAYDAY, MAYDAY, request immediate landing.', '遇险呼叫，请求立即降落。', 1),
-    ('M5', 'PAN-PAN, low fuel, request priority landing.', '紧急呼叫，低油量，请求优先降落。', 2),
-    ('M5', 'Emergency services standing by.', '应急救援已待命。', 3),
-    ('M5', 'Leave all luggage behind and evacuate immediately.', '请不要携带行李并立即撤离。', 4),
-    ('M5', 'Put on your oxygen mask.', '戴上你的氧气面罩。', 5),
-    ('M5', 'Remain calm and follow the crew.', '保持冷静，听从机组指挥。', 6),
-    ('M5', 'We are making an emergency landing.', '我们正在紧急降落。', 7)
-  ) AS t(module_code, english, chinese, display_order)
+    ('M5', 'SE1', 'Request immediate landing.', '请求立即降落。', 1),
+    ('M5', 'SE2', 'Emergency services standing by.', '应急救援已待命。', 2),
+    ('M5', 'SE3', 'Leave all luggage behind.', '请不要携带行李。', 3),
+    ('M5', 'SE4', 'Squawk seven seven zero zero.', '应答机设为7700。', 4),
+    ('M5', 'SE5', 'Put on your oxygen mask.', '戴上你的氧气面罩。', 5),
+    ('M5', 'SE6', 'Remain calm and follow the crew.', '保持冷静，听从机组指挥。', 6),
+    ('M5', 'SE7', 'We are making an emergency landing.', '我们正在紧急降落。', 7)
+  ) AS t(module_code, code, english, chinese, display_order)
 )
-INSERT INTO sentences (module_id, english, chinese, display_order)
-SELECT m.id, s.english, s.chinese, s.display_order
+INSERT INTO sentences (module_id, code, english, chinese, display_order)
+SELECT m.id, s.code, s.english, s.chinese, s.display_order
 FROM sentence_seed s
 JOIN modules m ON m.code = s.module_code
 ON CONFLICT (module_id, english) DO UPDATE SET
+  code = EXCLUDED.code,
   chinese = EXCLUDED.chinese,
   display_order = EXCLUDED.display_order;
 
@@ -145,12 +146,16 @@ WITH question_seed AS (
     ('M1', 'What is the ICAO phonetic word for the letter Q?', '["Quebec","Quick","Quarter","Queen"]'::jsonb, 'Quebec', 'ICAO 字母表中 Q 对应 Quebec。', 'easy', 'ICAO_DOC', 4),
     ('M1', 'What does "fuselage" mean?', '["机翼","机身","尾翼","起落架"]'::jsonb, '机身', 'fuselage 指飞机主体机身。', 'easy', 'LOCAL_CURRICULUM', 5),
     ('M1', 'Which aircraft part is used to steer left or right around the vertical axis?', '["Rudder","Aileron","Flap","Spoiler"]'::jsonb, 'Rudder', 'rudder（方向舵）主要控制偏航。', 'medium', 'LOCAL_CURRICULUM', 6),
+    ('M1', 'What does "propeller" mean?', '["机翼","螺旋桨","起落架","尾翼"]'::jsonb, '螺旋桨', 'propeller 指螺旋桨，小型飞机上常见。', 'easy', 'LOCAL_CURRICULUM', 7),
+    ('M1', 'Which part is at the back of the plane?', '["wing","cockpit","tail","engine"]'::jsonb, 'tail', 'tail（尾翼）位于飞机尾部。', 'easy', 'LOCAL_CURRICULUM', 8),
 
     ('M2', 'What is "boarding pass" in Chinese?', '["安检","登机牌","航站楼","值机柜台"]'::jsonb, '登机牌', 'Boarding pass 指登机牌。', 'easy', 'LOCAL_CURRICULUM', 1),
     ('M2', 'Passengers wait at the ____ before boarding.', '["runway","hangar","gate","tower"]'::jsonb, 'gate', '登机前通常在 gate 等候。', 'easy', 'LOCAL_CURRICULUM', 2),
     ('M2', '“Where is baggage claim?” means:', '["登机口在哪里？","行李提取处在哪里？","安检在哪里？","塔台在哪里？"]'::jsonb, '行李提取处在哪里？', 'baggage claim 即行李提取处。', 'easy', 'LOCAL_CURRICULUM', 3),
     ('M2', 'Where do passengers usually go right before boarding?', '["Runway","Gate","Control tower","Hangar"]'::jsonb, 'Gate', '登机前旅客在登机口等待。', 'easy', 'LOCAL_CURRICULUM', 4),
     ('M2', 'Which phrase is used when you need ATC to repeat a transmission?', '["Say again","Standby","Affirm","Maintain"]'::jsonb, 'Say again', '“Say again”用于请求重复上一条信息。', 'easy', 'LOCAL_CURRICULUM', 5),
+    ('M2', 'Which document do you show at the check-in counter?', '["passport","luggage","seatbelt","headset"]'::jsonb, 'passport', '值机时需出示 passport（护照）。', 'easy', 'LOCAL_CURRICULUM', 6),
+    ('M2', '"Where can I pick up my luggage?" means:', '["哪里可以领取行李？","登机口在哪里？","安检在哪里？","跑道在哪里？"]'::jsonb, '哪里可以领取行李？', 'luggage 指行李。', 'easy', 'LOCAL_CURRICULUM', 7),
 
     ('M3', 'Request landing _____.', '["gate","clearance","weather","fuel"]'::jsonb, 'clearance', '标准说法是 request landing clearance。', 'easy', 'LOCAL_CURRICULUM', 1),
     ('M3', '“Maintain heading 090.” means:', '["保持高度 9000","保持速度 90","保持航向 090","向右转 90 度"]'::jsonb, '保持航向 090', 'heading 是航向。', 'medium', 'LOCAL_CURRICULUM', 2),
@@ -162,6 +167,8 @@ WITH question_seed AS (
     ('M3', 'Which phrase asks ATC to repeat because communication is difficult?', '["Negative","Words twice","Maintain","Expedite"]'::jsonb, 'Words twice', 'FAA PCG: “Words twice”用于请求每句话说两遍。', 'hard', 'FAA_PCG', 8),
     ('M3', 'In standard phraseology, what does "Stand by" mean?', '["I cannot hear you","Wait and I will call you back","Cleared to proceed","Say again all after"]'::jsonb, 'Wait and I will call you back', 'Stand by 用于要求对方等待，稍后回复。', 'medium', 'FAA_PCG', 9),
     ('M3', 'Which phrase is used to request repetition of all after a specific word?', '["Read back","All before","Say again all after","Wilco"]'::jsonb, 'Say again all after', '用于请求从某一词之后全部重说。', 'hard', 'FAA_PCG', 10),
+    ('M3', '"Altitude" means:', '["高度","速度","航向","距离"]'::jsonb, '高度', 'altitude 指飞行高度。', 'easy', 'LOCAL_CURRICULUM', 11),
+    ('M3', '"Taxi to runway two four." means:', '["起飞","滑行到24号跑道","降落","复飞"]'::jsonb, '滑行到24号跑道', 'taxi 指地面滑行，two four 是跑道号的读法。', 'easy', 'LOCAL_CURRICULUM', 12),
 
     ('M4', 'What is "visibility" in aviation?', '["能见度","高度","速度","温度"]'::jsonb, '能见度', 'Visibility 指能看多远。', 'easy', 'LOCAL_CURRICULUM', 1),
     ('M4', 'Which one is dangerous weather?', '["headwind","thunderstorm","clear sky","tailwind"]'::jsonb, 'thunderstorm', '雷暴是典型危险天气。', 'medium', 'LOCAL_CURRICULUM', 2),
@@ -177,6 +184,8 @@ WITH question_seed AS (
     ('M4', 'Scheduled TAF issuance times are typically:', '["Every 3 hours at 0300/0900/1500/2100Z","Every 6 hours at 0000/0600/1200/1800Z","Only once daily at 1200Z","Every hour on the hour"]'::jsonb, 'Every 6 hours at 0000/0600/1200/1800Z', '常规 TAF 一般每 6 小时发布一次。', 'hard', 'AVWX_DATA', 12),
     ('M4', 'In METAR, what does BKN030 indicate?', '["Broken cloud base at 3000 feet","Visibility 3000 meters","Wind 030 at 30 knots","Temperature 30C"]'::jsonb, 'Broken cloud base at 3000 feet', 'BKN030 表示 3000 英尺多云（broken）。', 'medium', 'AVWX_DATA', 13),
     ('M4', 'Which METAR weather code means fog?', '["BR","FG","HZ","RA"]'::jsonb, 'FG', 'FG 表示雾（fog）。', 'easy', 'AVWX_DATA', 14),
+    ('M4', 'What does "icing" mean in aviation?', '["结冰","大雾","雷暴","侧风"]'::jsonb, '结冰', 'icing 指机翼结冰，十分危险。', 'easy', 'LOCAL_CURRICULUM', 15),
+    ('M4', '"Fog is clearing on the runway." means:', '["跑道上的雾正在消散","跑道正在结冰","跑道正在下雨","跑道正在关闭"]'::jsonb, '跑道上的雾正在消散', 'clearing 表示（雾）正在消散。', 'easy', 'LOCAL_CURRICULUM', 16),
 
     ('M5', 'Which call has highest emergency priority?', '["Standby","PAN-PAN","MAYDAY","Wilco"]'::jsonb, 'MAYDAY', 'MAYDAY 用于生命危险场景。', 'easy', 'SKYBRARY_EMG', 1),
     ('M5', 'What does "evacuate" mean?', '["紧急撤离","继续滑行","等待许可","保持高度"]'::jsonb, '紧急撤离', 'evacuate 表示紧急疏散/撤离。', 'easy', 'LOCAL_CURRICULUM', 2),
@@ -186,7 +195,9 @@ WITH question_seed AS (
     ('M5', 'Which transponder code indicates communication failure?', '["7500","7600","7700","7000"]'::jsonb, '7600', '7600 表示通信故障。', 'easy', 'ICAO_DOC', 6),
     ('M5', 'Which transponder code is associated with unlawful interference/hijack?', '["7500","7600","7700","1200"]'::jsonb, '7500', '7500 用于非法干扰/劫机。', 'easy', 'ICAO_DOC', 7),
     ('M5', 'Which call should be used for a serious medical issue without immediate aircraft control loss?', '["MAYDAY","PAN-PAN","ROGER","STANDBY"]'::jsonb, 'PAN-PAN', '医疗紧急通常使用 PAN-PAN。', 'medium', 'ICAO_DOC', 8),
-    ('M5', 'Which transponder code should be selected for unlawful interference?', '["7000","7600","7700","7500"]'::jsonb, '7500', '非法干扰/劫机代码为 7500。', 'easy', 'ICAO_DOC', 9)
+    ('M5', 'Which transponder code should be selected for unlawful interference?', '["7000","7600","7700","7500"]'::jsonb, '7500', '非法干扰/劫机代码为 7500。', 'easy', 'ICAO_DOC', 9),
+    ('M5', 'If the cabin loses pressure, what should you do first?', '["Put on your oxygen mask","Open the window","Stand up and walk","Keep reading"]'::jsonb, 'Put on your oxygen mask', '客舱失压时应先戴好自己的氧气面罩。', 'easy', 'SKYBRARY_EMG', 10),
+    ('M5', 'When should you inflate a life vest?', '["Before leaving your seat","After leaving the plane","During takeoff","In the terminal"]'::jsonb, 'After leaving the plane', '救生衣应在离开飞机后再充气。', 'medium', 'SKYBRARY_EMG', 11)
   ) AS t(module_code, question_text, options, correct_answer, explanation, difficulty, source_tag, display_order)
 )
 INSERT INTO questions (module_id, question_text, options, correct_answer, explanation, difficulty, source_tag, display_order)

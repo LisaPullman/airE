@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Card from '../common/Card'
 import Button from '../common/Button'
 import type { Sentence } from '../../types'
@@ -14,6 +14,14 @@ export default function SentenceCard({ sentence, index }: SentenceCardProps) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isRecording, setIsRecording] = useState(false)
   const [playError, setPlayError] = useState<string | null>(null)
+  const recordingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // 组件卸载时清理录音模拟计时器，避免对已卸载组件 setState
+  useEffect(() => {
+    return () => {
+      if (recordingTimerRef.current) clearTimeout(recordingTimerRef.current)
+    }
+  }, [])
 
   const playEnglish = async () => {
     setPlayError(null)
@@ -49,11 +57,18 @@ export default function SentenceCard({ sentence, index }: SentenceCardProps) {
   }
 
   const toggleRecording = () => {
-    setIsRecording(!isRecording)
-    if (!isRecording) {
-      // 模拟录音
-      setTimeout(() => setIsRecording(false), 3000)
+    const next = !isRecording
+    setIsRecording(next)
+    if (recordingTimerRef.current) {
+      clearTimeout(recordingTimerRef.current)
+      recordingTimerRef.current = null
     }
+    if (!next) return
+    // 模拟录音：3 秒后自动停止
+    recordingTimerRef.current = setTimeout(() => {
+      setIsRecording(false)
+      recordingTimerRef.current = null
+    }, 3000)
   }
 
   return (
